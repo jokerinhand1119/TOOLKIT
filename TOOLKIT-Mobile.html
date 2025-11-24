@@ -6377,12 +6377,14 @@
                     console.log('Triggering print...');
                     window.print();
                     
-                    // Restore work order after print completes
-                    // On Android, the printer may re-render after preview, so keep work order removed for 10 seconds
+                    // Restore work order only after user closes print dialog
                     if (inspectionOnly && removedWorkOrder) {
-                        const restoreDelay = isMobile ? 10000 : 2000; // 10 seconds on mobile to ensure printer finishes
-                        console.log('Will restore work order after ' + restoreDelay + 'ms');
-                        setTimeout(() => {
+                        // Use both afterprint event AND a timeout fallback
+                        let restored = false;
+                        
+                        const doRestore = () => {
+                            if (restored) return;
+                            restored = true;
                             if (workOrderParent) {
                                 if (workOrderNextSibling) {
                                     workOrderParent.insertBefore(removedWorkOrder, workOrderNextSibling);
@@ -6391,7 +6393,20 @@
                                 }
                                 console.log('Restored work order to DOM');
                             }
-                        }, restoreDelay);
+                        };
+                        
+                        // Restore on afterprint event
+                        window.addEventListener('afterprint', function restoreWorkOrder() {
+                            console.log('afterprint event fired');
+                            doRestore();
+                            window.removeEventListener('afterprint', restoreWorkOrder);
+                        });
+                        
+                        // Fallback: restore after 3 seconds if afterprint doesn't fire
+                        setTimeout(() => {
+                            console.log('Fallback timer fired');
+                            doRestore();
+                        }, 3000);
                     }
                 }, printDelay);
                 
