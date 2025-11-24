@@ -6367,15 +6367,6 @@
                 setTimeout(() => {
                     console.log('Triggering print...');
                     window.print();
-                    
-                    // Reset work order visibility after print
-                    window.addEventListener('afterprint', function resetAfterPrint() {
-                        const workOrder = document.getElementById('work-order-print');
-                        if (workOrder) {
-                            workOrder.classList.remove('hide-for-print');
-                        }
-                        console.log('Reset work order visibility after print');
-                    }, { once: true });
                 }, printDelay);
                 
             } catch (error) {
