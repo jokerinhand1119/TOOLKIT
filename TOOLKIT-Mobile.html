@@ -6124,6 +6124,10 @@
             
             closePrintOptions();
             
+            // Add hide class to work order for print
+            const workOrder = document.getElementById('work-order-print');
+            workOrder.classList.add('hide-for-print');
+            
             // Fill inspection form first, then handle printing
             await fillAndPrintInspectionForm(true); // Pass true to indicate inspection-only mode
         }
@@ -6133,6 +6137,10 @@
             syncMobileFormToPrint();
             
             closePrintOptions();
+            
+            // Make sure work order is visible (remove hide class if present)
+            const workOrder = document.getElementById('work-order-print');
+            workOrder.classList.remove('hide-for-print');
             
             // Prepare work order HTML print (same as printWorkOrderOnly but without calling window.print)
             autoResizePrintFields();
@@ -6355,59 +6363,19 @@
                 const printDelay = isMobile ? 2000 : 500;
                 console.log(`Waiting ${printDelay}ms before printing (${isMobile ? 'mobile' : 'desktop'} mode)`);
                 
-                // For inspection-only, physically remove work order from DOM to force Android Chrome to only print inspection
-                let removedWorkOrder = null;
-                let workOrderParent = null;
-                let workOrderNextSibling = null;
-                
-                if (inspectionOnly) {
-                    const workOrder = document.getElementById('work-order-print');
-                    if (workOrder) {
-                        // Store position for restoration
-                        workOrderParent = workOrder.parentNode;
-                        workOrderNextSibling = workOrder.nextSibling;
-                        // Physically remove from DOM
-                        removedWorkOrder = workOrderParent.removeChild(workOrder);
-                        console.log('Removed work order from DOM for inspection-only print');
-                    }
-                }
-                
                 // Trigger print after image is loaded
                 setTimeout(() => {
                     console.log('Triggering print...');
                     window.print();
                     
-                    // Restore work order only after user closes print dialog
-                    if (inspectionOnly && removedWorkOrder) {
-                        // Use both afterprint event AND a timeout fallback
-                        let restored = false;
-                        
-                        const doRestore = () => {
-                            if (restored) return;
-                            restored = true;
-                            if (workOrderParent) {
-                                if (workOrderNextSibling) {
-                                    workOrderParent.insertBefore(removedWorkOrder, workOrderNextSibling);
-                                } else {
-                                    workOrderParent.appendChild(removedWorkOrder);
-                                }
-                                console.log('Restored work order to DOM');
-                            }
-                        };
-                        
-                        // Restore on afterprint event
-                        window.addEventListener('afterprint', function restoreWorkOrder() {
-                            console.log('afterprint event fired');
-                            doRestore();
-                            window.removeEventListener('afterprint', restoreWorkOrder);
-                        });
-                        
-                        // Fallback: restore after 3 seconds if afterprint doesn't fire
-                        setTimeout(() => {
-                            console.log('Fallback timer fired');
-                            doRestore();
-                        }, 3000);
-                    }
+                    // Reset work order visibility after print
+                    window.addEventListener('afterprint', function resetAfterPrint() {
+                        const workOrder = document.getElementById('work-order-print');
+                        if (workOrder) {
+                            workOrder.classList.remove('hide-for-print');
+                        }
+                        console.log('Reset work order visibility after print');
+                    }, { once: true });
                 }, printDelay);
                 
             } catch (error) {
