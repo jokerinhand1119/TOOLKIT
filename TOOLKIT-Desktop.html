@@ -6748,12 +6748,18 @@ saveBtn.addEventListener('click', function() {
                     
                     status.textContent = exists ? 'Updated!' : 'Saved!';
                     status.style.color = '#28a745';
+                    let menuStatus = document.getElementById('menu-status');
+                    if (menuStatus) {
+                        menuStatus.textContent = exists ? '✅ Updated!' : '✅ Saved!';
+                    }
                     setTimeout(function() { 
                         if (currentLockStatus === 'locked-by-me') {
                             status.textContent = '✏️ You are editing';
                             status.style.color = '#00ff88';
+                            if (menuStatus) menuStatus.textContent = '✏️ You are editing';
                         } else {
                             status.textContent = '';
+                            if (menuStatus) menuStatus.textContent = '';
                         }
                     }, 2000);
                     
