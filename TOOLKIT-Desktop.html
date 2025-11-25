@@ -206,38 +206,88 @@
             align-items: center;
             gap: 8px;
             padding-left: 16px;
+            position: relative;
         }
         
-        .menu-work-orders input {
+        .searchable-dropdown-container {
+            position: relative;
+            min-width: 450px;
+        }
+        
+        .searchable-dropdown-input {
             padding: 6px 10px;
             border: 1px solid #404040;
             border-radius: 4px;
             background: #2d2d2d;
             color: #fff;
             font-size: 12px;
-            width: 180px;
+            width: 100%;
             text-transform: uppercase;
         }
         
-        .menu-work-orders input::placeholder {
+        .searchable-dropdown-input::placeholder {
             color: #888;
         }
         
-        .menu-work-orders select {
-            padding: 6px 10px;
-            border: 1px solid #404040;
-            border-radius: 4px;
-            background: #2d2d2d;
-            color: #fff;
-            font-size: 12px;
-            min-width: 250px;
-            text-transform: uppercase;
+        .searchable-dropdown-input:focus {
+            outline: none;
+            border-color: #00bfff;
+            box-shadow: 0 0 0 2px rgba(0, 191, 255, 0.2);
         }
         
-        .menu-work-orders select option {
-            padding: 8px;
+        .searchable-dropdown-list {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            max-height: 400px;
+            overflow-y: auto;
             background: #2d2d2d;
+            border: 1px solid #404040;
+            border-top: none;
+            border-radius: 0 0 4px 4px;
+            z-index: 10003;
+            margin-top: -4px;
+        }
+        
+        .searchable-dropdown-list.show {
+            display: block;
+        }
+        
+        .searchable-dropdown-item {
+            padding: 10px;
+            cursor: pointer;
+            border-bottom: 1px solid #404040;
+            white-space: pre-line;
+            text-transform: uppercase;
+            font-size: 12px;
             color: #fff;
+        }
+        
+        .searchable-dropdown-item:hover {
+            background: #404040;
+        }
+        
+        .searchable-dropdown-item:last-child {
+            border-bottom: none;
+        }
+        
+        .searchable-dropdown-list::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .searchable-dropdown-list::-webkit-scrollbar-track {
+            background: #1e1e1e;
+        }
+        
+        .searchable-dropdown-list::-webkit-scrollbar-thumb {
+            background: #555;
+            border-radius: 4px;
+        }
+        
+        .searchable-dropdown-list::-webkit-scrollbar-thumb:hover {
+            background: #666;
         }
         
         #menu-status {
@@ -1765,10 +1815,14 @@
         </div>
         
         <div class="menu-work-orders">
-            <input type="text" id="entry-search" placeholder="🔍 Search work orders...">
-            <select id="entries-dropdown">
-                <option value="">Select a saved entry...</option>
-            </select>
+            <div class="searchable-dropdown-container">
+                <input type="text" 
+                       id="searchable-dropdown-input" 
+                       class="searchable-dropdown-input" 
+                       placeholder="🔍 Search/Select work order..." 
+                       autocomplete="off">
+                <div id="searchable-dropdown-list" class="searchable-dropdown-list"></div>
+            </div>
         </div>
         
         <div id="menu-status"></div>
@@ -4959,16 +5013,60 @@ database.ref = function(path) {
 db.ref = database.ref; // Ensure alias also uses the wrapped version
 
 const saveBtn = document.getElementById('save-btn');
-const entrySearch = document.getElementById('entry-search');
-const entriesDropdown = document.getElementById('entries-dropdown');
+const searchableInput = document.getElementById('searchable-dropdown-input');
+const searchableList = document.getElementById('searchable-dropdown-list');
 const deleteEntryBtn = document.getElementById('delete-entry-btn');
 const newOrderBtn = document.getElementById('new-order-btn');
 let entriesCache = {};
 let currentEditKey = null;
+let selectedWorkOrderKey = null;
 // currentWorkOrderNumber and currentWatchingWorkOrder declared at top of Firebase script
 let lastZipUsedForCounty = ''; // Track ZIP code for smart county updates
 let currentWorkOrderListener = null; // Firebase listener for current work order
 let lastKnownTimestamp = null; // Track last timestamp to detect updates
+
+// Searchable dropdown functionality
+searchableInput.addEventListener('input', function() {
+    const filter = this.value.trim();
+    renderSearchableDropdown(entriesCache, filter);
+    if (filter || Object.keys(entriesCache).length > 0) {
+        searchableList.classList.add('show');
+    } else {
+        searchableList.classList.remove('show');
+    }
+});
+
+searchableInput.addEventListener('focus', function() {
+    const filter = this.value.trim();
+    renderSearchableDropdown(entriesCache, filter);
+    if (Object.keys(entriesCache).length > 0) {
+        searchableList.classList.add('show');
+    }
+});
+
+// Close dropdown when clicking outside
+document.addEventListener('click', function(e) {
+    if (!e.target.closest('.searchable-dropdown-container')) {
+        searchableList.classList.remove('show');
+    }
+});
+
+// Handle item selection
+function selectWorkOrder(key) {
+    const entry = entriesCache[key];
+    if (!entry) return;
+    
+    selectedWorkOrderKey = key;
+    
+    // Clear search input so user can search again immediately
+    searchableInput.value = '';
+    
+    // Close dropdown
+    searchableList.classList.remove('show');
+    
+    // Trigger work order loading
+    loadSelectedWorkOrder(key);
+}
 
 // --- LOCK SYSTEM ---
 // DEBUG_LOCK_MODE declared at top of Firebase script
@@ -5802,10 +5900,11 @@ function normalizeForSearch(str) {
         .trim();                      // Remove leading/trailing spaces
 }
 
-function renderDropdown(entries, filter = '') {
-    entriesDropdown.innerHTML = '<option value="">Select a saved entry...</option>';
+function renderSearchableDropdown(entries, filter = '') {
+    searchableList.innerHTML = '';
+    
     if (!entries || Object.keys(entries).length === 0) {
-        entriesDropdown.innerHTML += '<option disabled>No saved entries</option>';
+        searchableList.innerHTML = '<div class="searchable-dropdown-item" style="opacity:0.5;cursor:default;">No saved entries</div>';
         return;
     }
     
@@ -5836,8 +5935,8 @@ function renderDropdown(entries, filter = '') {
         };
         
         // Use only the date field for sorting
-        const aTime = parseDate(a[1].input_date || '');
-        const bTime = parseDate(b[1].input_date || '');
+        const aTime = parseDate(a[1].input_date || a[1].date || '');
+        const bTime = parseDate(b[1].input_date || b[1].date || '');
         
         // If times are equal, use work order number as tiebreaker (newer WO numbers are higher)
         if (aTime === bTime) {
@@ -5849,23 +5948,13 @@ function renderDropdown(entries, filter = '') {
         return bTime - aTime; // Descending order (newest first)
     });
     
+    let matchCount = 0;
     sortedEntries.forEach(([key, entry]) => {
         const yearMakeModel = entry.input_year_make_model_trim || '';
-        const customerName = entry.input_customer_name || '';
-        const vinNumber = entry.input_vin_number || '';
-        const plateNumber = entry.input_plate_number || '';
-        const date = entry.input_date || '';
-        
-        // Create multi-line label with emojis and last 8 digits of VIN
-        let label = `📅 ${date}\n`;
-        if (vinNumber) {
-            // Get last 8 digits of VIN
-            const shortVin = vinNumber.length > 8 ? vinNumber.slice(-8).toUpperCase() : vinNumber.toUpperCase();
-            label += `👤 ${customerName.toUpperCase()} • 🔑 ${shortVin}\n`;
-        } else {
-            label += `👤 ${customerName.toUpperCase()}\n`;
-        }
-        label += `🚗 ${yearMakeModel.toUpperCase()}`;
+        const customerName = entry.input_customer_name || entry.customer_name || '';
+        const vinNumber = entry.input_vin_number || entry.vin_number || '';
+        const plateNumber = entry.input_plate_number || entry.plate || '';
+        const date = entry.input_date || entry.date || '';
         
         // Include all searchable fields in search string
         const searchString = `${customerName} ${yearMakeModel} ${vinNumber} ${plateNumber} ${date}`;
@@ -5875,9 +5964,27 @@ function renderDropdown(entries, filter = '') {
         const normalizedFilter = normalizeForSearch(filter);
         
         if (normalizedSearchString.includes(normalizedFilter)) {
-            entriesDropdown.innerHTML += `<option value="${key}">${label}</option>`;
+            matchCount++;
+            
+            // Create multi-line label with emojis and last 8 digits of VIN
+            const shortVin = vinNumber.length > 8 ? vinNumber.slice(-8).toUpperCase() : vinNumber.toUpperCase();
+            
+            const item = document.createElement('div');
+            item.className = 'searchable-dropdown-item';
+            item.dataset.key = key;
+            item.innerHTML = `� ${date}\n�👤 ${customerName.toUpperCase()}${shortVin ? ' • 🔑 ' + shortVin : ''}\n🚗 ${yearMakeModel.toUpperCase()}`;
+            
+            item.addEventListener('click', function() {
+                selectWorkOrder(key);
+            });
+            
+            searchableList.appendChild(item);
         }
     });
+    
+    if (matchCount === 0 && filter) {
+        searchableList.innerHTML = '<div class="searchable-dropdown-item" style="opacity:0.5;cursor:default;">No matching work orders found</div>';
+    }
 }
 
 // Generate next sequential work order number
@@ -5943,41 +6050,13 @@ async function generateNextWorkOrderNumber() {
 function fetchEntries() {
     db.ref('repairOrders').on('value', function(snapshot) {
         entriesCache = snapshot.val() || {};
-        renderDropdown(entriesCache, entrySearch.value);
+        renderSearchableDropdown(entriesCache, '');
     });
 }
 // Don't call fetchEntries() here - it's called after authentication in initializeApp()
 
-entrySearch.addEventListener('input', function() {
-    renderDropdown(entriesCache, entrySearch.value);
-    // Auto-open dropdown when searching
-    if (entrySearch.value.length > 0) {
-        entriesDropdown.size = Math.min(entriesDropdown.options.length, 8); // Show up to 8 options
-    } else {
-        entriesDropdown.size = 1; // Reset to normal size when search is cleared
-    }
-});
-
-// Auto-open dropdown when focusing on search box
-entrySearch.addEventListener('focus', function() {
-    if (Object.keys(entriesCache).length > 0) {
-        renderDropdown(entriesCache, entrySearch.value);
-        entriesDropdown.size = Math.min(entriesDropdown.options.length, 8); // Show up to 8 options
-    }
-});
-
-// Reset dropdown size when it loses focus
-entriesDropdown.addEventListener('blur', function() {
-    setTimeout(() => {
-        entriesDropdown.size = 1; // Reset to normal size
-    }, 200); // Small delay to allow selection
-});
-
-entriesDropdown.addEventListener('change', function(e) {
-    const key = entriesDropdown.value;
-    
-    // Check for force unlock (Ctrl+Shift held during selection)
-    const forceUnlock = e.ctrlKey && e.shiftKey;
+// Handle work order loading (extracted from old change event)
+function loadSelectedWorkOrder(key, forceUnlock = false) {
     if (!key || !entriesCache[key]) {
         // Release lock on previous work order
         if (currentWorkOrderNumber) {
@@ -6132,7 +6211,7 @@ entriesDropdown.addEventListener('change', function(e) {
             document.getElementById('save-status').style.color = '#dc3545';
         }
     });
-});
+}
 
 deleteEntryBtn.addEventListener('click', function() {
     if (!currentEditKey) {
@@ -6265,7 +6344,7 @@ document.getElementById('new-work-order-btn').addEventListener('click', async fu
     currentLockStatus = 'unlocked';
     saveBtn.textContent = 'Save';
     entriesDropdown.value = '';
-    entrySearch.value = '';
+    dropdownSearchBuffer = ''; // Clear search buffer
     deleteEntryBtn.style.display = 'none';
     const menuDeleteBtn = document.getElementById('menu-delete-btn');
     if (menuDeleteBtn) menuDeleteBtn.style.display = 'none';
@@ -7163,7 +7242,6 @@ saveBtn.addEventListener('click', function() {
 
 </body>
 </html>
-
 
 
 
