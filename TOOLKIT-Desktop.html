@@ -109,6 +109,7 @@
             font-family: Arial, sans-serif;
             background: #f0f0f0;
             padding: 20px;
+            padding-top: 55px; /* Space for fixed menu bar */
         }
 
         .container {
@@ -119,17 +120,174 @@
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
         }
 
-        #firebase-status {
+        /* Menu Bar Styles */
+        #menu-bar {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
-            padding: 5px;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            padding: 0;
+            display: flex;
+            align-items: center;
+            border-bottom: 2px solid #404040;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            height: 35px;
+            z-index: 10001;
+        }
+        
+        #menu-bar .logo {
+            color: #00ff88;
+            font-weight: bold;
+            font-size: 16px;
+            padding: 0 16px;
+            margin-right: 16px;
+            border-right: 1px solid #404040;
+        }
+        
+        .menu-item {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .menu-btn {
+            background: none;
+            border: none;
+            color: #fff;
+            padding: 8px 15px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            height: 35px;
+        }
+        
+        .menu-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #00ff88;
+        }
+        
+        .menu-dropdown {
+            display: none;
+            position: absolute;
+            background: #2d2d2d;
+            min-width: 220px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.4);
+            border: 1px solid #404040;
+            border-radius: 6px;
+            margin-top: 2px;
+            z-index: 10002;
+        }
+        
+        .menu-item:hover .menu-dropdown {
+            display: block;
+        }
+        
+        .menu-dropdown button {
+            width: 100%;
+            background: none;
+            border: none;
+            color: #fff;
+            padding: 12px 16px;
+            text-align: left;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.2s;
+            display: block;
+        }
+        
+        .menu-dropdown button:hover {
+            background: rgba(0, 255, 136, 0.1);
+            color: #00ff88;
+        }
+        
+        .menu-work-orders {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding-left: 16px;
+        }
+        
+        .menu-work-orders input {
+            padding: 6px 10px;
+            border: 1px solid #404040;
+            border-radius: 4px;
+            background: #2d2d2d;
+            color: #fff;
+            font-size: 12px;
+            width: 180px;
+            text-transform: uppercase;
+        }
+        
+        .menu-work-orders input::placeholder {
+            color: #888;
+        }
+        
+        .menu-work-orders select {
+            padding: 6px 10px;
+            border: 1px solid #404040;
+            border-radius: 4px;
+            background: #2d2d2d;
+            color: #fff;
+            font-size: 12px;
+            min-width: 250px;
+            text-transform: uppercase;
+        }
+        
+        .menu-work-orders select option {
+            padding: 8px;
+            background: #2d2d2d;
+            color: #fff;
+        }
+        
+        #menu-status {
+            margin-left: auto;
+            padding: 0 16px;
+            font-size: 12px;
+            color: #00ff88;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        #menu-status.locked-readonly {
+            color: #ff4757;
+        }
+        
+        #menu-force-unlock-btn {
+            display: none;
+            background: linear-gradient(135deg, #ff9800 0%, #ff6f00 100%);
+            color: white;
+            border: none;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-right: 16px;
+        }
+        
+        #menu-force-unlock-btn:hover {
+            background: linear-gradient(135deg, #ff6f00 0%, #ff9800 100%);
+        }
+        
+        #menu-force-unlock-btn.visible {
+            display: inline-block;
+        }
+
+        #firebase-status {
+            position: fixed;
+            top: 35px;
+            left: 0;
+            width: 100%;
+            padding: 4px;
             background-color: #ffc107; /* Yellow for connecting */
             color: black;
             text-align: center;
-            font-size: 12px;
-            z-index: 100;
+            font-size: 11px;
+            z-index: 999;
             font-weight: bold;
         }
         #firebase-status.connected {
@@ -1194,6 +1352,53 @@
             cursor: move;
         }
         
+        /* Quick Jobs Widget */
+        #quick-jobs-widget {
+            display: none !important;
+            position: fixed;
+            top: 160px;
+            left: 20px;
+            width: 280px;
+            background: #1e1e1e;
+            border: 2px solid #ffc107;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(255, 193, 7, 0.3);
+            z-index: 9998;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            cursor: move;
+        }
+        
+        #quick-jobs-widget .widget-header {
+            background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
+        }
+        
+        #quick-jobs-widget.minimized {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            overflow: hidden;
+        }
+        
+        #quick-jobs-widget.minimized .widget-content {
+            display: none;
+        }
+        
+        #quick-jobs-widget.minimized .widget-header {
+            height: 60px;
+            justify-content: center;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        
+        #quick-jobs-widget.minimized .widget-header h3 {
+            display: none;
+        }
+        
+        #quick-jobs-widget.minimized .minimize-btn {
+            font-size: 24px;
+            margin: 0;
+        }
+        
         #labor-timer-widget.minimized {
             width: 60px;
             height: 60px;
@@ -1512,6 +1717,64 @@
     </div>
 
     <div id="firebase-status" class="no-print">Connecting...</div>
+    
+    <!-- Top Menu Bar -->
+    <div id="menu-bar" class="no-print">
+        <div class="logo">🔧 TOOLKIT</div>
+        
+        <div class="menu-item">
+            <button class="menu-btn">📁 File</button>
+            <div class="menu-dropdown">
+                <button onclick="document.getElementById('new-work-order-btn').click();">📄 New Work Order</button>
+                <button onclick="document.getElementById('save-btn').click();">💾 Save</button>
+                <button onclick="document.getElementById('print-btn').click();">🖨️ Print</button>
+                <button onclick="document.getElementById('delete-entry-btn').click();" id="menu-delete-btn" style="display:none;">🗑️ Delete Work Order</button>
+            </div>
+        </div>
+        
+        <div class="menu-item">
+            <button class="menu-btn">🔧 Jobs</button>
+            <div class="menu-dropdown">
+                <button onclick="document.getElementById('canned-jobs-btn').click();">📋 Manage Canned Jobs</button>
+                <button onclick="document.getElementById('undo-btn').click();" id="menu-undo-btn" style="display:none;">↶ Undo Last Job</button>
+                <div style="border-top:1px solid #404040;margin:4px 0;padding-top:4px;">
+                    <div style="color:#888;font-size:10px;padding:4px 12px;font-weight:600;">⭐ FAVORITES</div>
+                    <div id="menu-favorite-jobs"></div>
+                </div>
+                <div style="border-top:1px solid #404040;margin:4px 0;padding-top:4px;">
+                    <div style="color:#888;font-size:10px;padding:4px 12px;font-weight:600;">🕐 RECENT</div>
+                    <div id="menu-recent-jobs"></div>
+                </div>
+                <div style="border-top:1px solid #404040;margin:4px 0;padding-top:4px;">
+                    <div style="color:#888;font-size:10px;padding:4px 12px;font-weight:600;">📂 CATEGORIES</div>
+                    <button onclick="showJobsInMenuByCategory('all')">All Jobs</button>
+                    <button onclick="showJobsInMenuByCategory('Maintenance')">Maintenance</button>
+                    <button onclick="showJobsInMenuByCategory('Brakes')">Brakes</button>
+                    <button onclick="showJobsInMenuByCategory('Tires')">Tires</button>
+                    <button onclick="showJobsInMenuByCategory('Engine')">Engine</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="menu-item">
+            <button class="menu-btn">⚙️ Settings</button>
+            <div class="menu-dropdown">
+                <button onclick="document.getElementById('settings-btn').click();">💰 Pricing Settings</button>
+                <button onclick="saveCompanyInfoFromSettings();">🏢 Company Info</button>
+            </div>
+        </div>
+        
+        <div class="menu-work-orders">
+            <input type="text" id="entry-search" placeholder="🔍 Search work orders...">
+            <select id="entries-dropdown">
+                <option value="">Select a saved entry...</option>
+            </select>
+        </div>
+        
+        <div id="menu-status"></div>
+        <button id="menu-force-unlock-btn" title="Force unlock this work order">⚠️ Force Unlock</button>
+    </div>
+    
     <div class="container">
         <!-- Work Order -->
         <div class="work-order" id="repair-order-form">
@@ -1519,7 +1782,8 @@
             <div class="company-header">
                 <h1 id="company_name" contenteditable="true" style="cursor: text; outline: none;" title="Click to edit company name">Edward Colosimo Auto Sales and Service</h1>
                 <p id="company_address" contenteditable="true" style="cursor: text; outline: none;" title="Click to edit address">1682 Evans City Road, Evans City, PA 16033</p>
-                <p id="company_contact" contenteditable="true" style="cursor: text; outline: none;" title="Click to edit contact info">Phone: (724) 538-5331 | Email: info@yourcompany.com</p>
+                <p id="company_contact" contenteditable="true" style="cursor: text; outline: none;" title="Click to edit phone and fax">Phone: (724) 538-5331 | Fax: (724) 538-0000</p>
+                <p id="company_contact2" contenteditable="true" style="cursor: text; outline: none;" title="Click to edit email">Email: info@yourcompany.com</p>
                 <p id="company_website" contenteditable="true" style="cursor: text; outline: none;" title="Click to edit website">Website: www.ecautomotive.com</p>
                 <small id="company-hint" style="color: #666; font-size: 8px; display: none; margin-top: 5px;">💡 Click company info above to edit • Then click "Save Company Info" button</small>
             </div>
@@ -1906,7 +2170,7 @@
                         </div>
                         <div>
                             <label style="font-weight: bold; font-size: 10px; display: block; margin-bottom: 3px;">SHOP FEES:</label>
-                            <input type="text" id="shop_fees" style="width: 100%; padding: 4px; border: 1px solid black; font-size: 11px;">
+                            <input type="text" id="shop_fees" onclick="openFeeSelector()" style="width: 100%; padding: 4px; border: 1px solid black; font-size: 11px; cursor: pointer; background: #f9f9f9;" placeholder="Click to select fees">
                         </div>
                         <div>
                             <label style="font-weight: bold; font-size: 10px; display: block; margin-bottom: 3px;">TAX:</label>
@@ -1998,7 +2262,7 @@
         </div>
     </div>
     
-    <div id="bottom-bar" class="no-print">
+    <div id="bottom-bar" class="no-print" style="display:none;">
   <div style="max-width:850px;margin:0 auto 10px auto;text-align:left;">
     <input id="entry-search" type="text" placeholder="Search by customer, VIN, vehicle, or date..." style="width:45%;padding:4px 8px;margin-bottom:4px;border-radius:4px;border:1px solid #404040;font-size:13px;text-transform:uppercase;background:#2d2d2d;color:#ffffff;">
     <select id="entries-dropdown" style="width:75%;padding:4px 8px;border-radius:4px;border:1px solid #404040;font-size:13px;text-transform:uppercase;background:#2d2d2d;color:#ffffff;">
@@ -2010,12 +2274,119 @@
   <button id="new-work-order-btn" class="btn-professional">New Work Order</button>
   <button id="new-order-btn" class="btn-professional" style="display:none;">New Order (Same Customer)</button>
   <button id="print-btn" class="btn-professional">Print</button>
+  <button id="canned-jobs-btn" class="btn-professional">Canned Jobs</button>
+  <button id="undo-btn" class="btn-professional" onclick="undoLastAction()" style="display:none;background:#ff9800;border-color:#ff9800;">↶ Undo</button>
+  <button id="settings-btn" class="btn-professional">Settings</button>
   <button id="save-company-btn" class="btn-professional" style="display:none;" title="Save current company info as default for all new work orders">💾 Save Company Info</button>
   <span id="save-status" style="margin-left:16px;font-size:14px;color:#00ff88;"></span>
   <button id="force-unlock-btn" title="Force unlock this work order">⚠️ Force Unlock</button>
 </div>
 
     <script>
+        // ===== AUTOMATIC PRICING CALCULATIONS =====
+        let pricingUpdateTimeout = null;
+        let selectedFees = []; // Global array to store selected fee keys
+        
+        // Calculate and update all totals
+        function calculateTotals() {
+            // Get shop settings from Firebase or use defaults
+            let laborRate = 0;
+            let taxRate = 0;
+            let shopFees = {};
+            
+            // Try to get settings from Firebase if available
+            if (typeof database !== 'undefined' && companyId) {
+                database.ref('shopSettings/' + companyId).once('value').then(snapshot => {
+                    const settings = snapshot.val();
+                    if (settings) {
+                        laborRate = parseFloat(settings.laborRate) || 0;
+                        taxRate = parseFloat(settings.taxRate) || 0;
+                        shopFees = settings.shopFees || {};
+                    }
+                    performCalculation(laborRate, taxRate, shopFees);
+                }).catch(() => {
+                    // If Firebase not ready, use defaults
+                    performCalculation(0, 0, {});
+                });
+            } else {
+                // Firebase not ready, calculate with zeros
+                performCalculation(0, 0, {});
+            }
+        }
+        
+        function performCalculation(laborRate, taxRate, shopFees) {
+            let partsSubtotal = 0;
+            let totalLaborHours = 0;
+            
+            // Calculate parts subtotal: sum of (quantity × price) for all rows
+            for (let i = 1; i <= 22; i++) {
+                const qtyField = document.getElementById('qty' + i);
+                const priceField = document.getElementById('price' + i);
+                
+                if (qtyField && priceField) {
+                    const qty = parseFloat(qtyField.value) || 0;
+                    const price = parseFloat(priceField.value) || 0;
+                    partsSubtotal += qty * price;
+                }
+            }
+            
+            // Calculate total labor hours
+            for (let i = 1; i <= 22; i++) {
+                const laborField = document.getElementById('labor' + i);
+                if (laborField) {
+                    const hours = parseFloat(laborField.value) || 0;
+                    totalLaborHours += hours;
+                }
+            }
+            
+            // Calculate labor cost
+            const laborCost = totalLaborHours * laborRate;
+            
+            // Calculate total shop fees (only selected fees)
+            let shopFeesTotal = 0;
+            if (shopFees && typeof shopFees === 'object' && selectedFees.length > 0) {
+                selectedFees.forEach(feeKey => {
+                    if (shopFees[feeKey]) {
+                        shopFeesTotal += parseFloat(shopFees[feeKey].amount) || 0;
+                    }
+                });
+            }
+            
+            // Calculate subtotal before tax
+            const subtotalBeforeTax = partsSubtotal + laborCost + shopFeesTotal;
+            
+            // Calculate tax (on subtotal)
+            const taxAmount = subtotalBeforeTax * (taxRate / 100);
+            
+            // Calculate grand total
+            const grandTotal = subtotalBeforeTax + taxAmount;
+            
+            // Update the form fields
+            const partsSubtotalField = document.getElementById('parts_subtotal');
+            const laborCostField = document.getElementById('labor_cost');
+            const shopFeesField = document.getElementById('shop_fees');
+            const taxAmountField = document.getElementById('tax_amount');
+            const grandTotalField = document.getElementById('grand_total');
+            
+            if (partsSubtotalField) partsSubtotalField.value = partsSubtotal.toFixed(2);
+            if (laborCostField) laborCostField.value = laborCost.toFixed(2);
+            if (shopFeesField) {
+                shopFeesField.value = shopFeesTotal.toFixed(2);
+                // Update placeholder if fees are selected
+                if (selectedFees && selectedFees.length > 0) {
+                    shopFeesField.placeholder = `${selectedFees.length} fee(s) selected`;
+                }
+            }
+            if (taxAmountField) taxAmountField.value = taxAmount.toFixed(2);
+            if (grandTotalField) grandTotalField.value = grandTotal.toFixed(2);
+        }
+        
+        // Debounced calculation to avoid excessive updates
+        function schedulePricingUpdate() {
+            if (pricingUpdateTimeout) clearTimeout(pricingUpdateTimeout);
+            pricingUpdateTimeout = setTimeout(calculateTotals, 300);
+        }
+        
         // ===== VIN SCANNER WITH CAMERA =====
         let scannerActive = false;
         
@@ -2052,6 +2423,26 @@
                     });
                     // Resize on load if there's existing content
                     resizePartNumberField(pnDiv);
+                }
+            }
+            
+            // Add event listeners for automatic pricing calculations
+            for (let i = 1; i <= 22; i++) {
+                const qtyField = document.getElementById('qty' + i);
+                const priceField = document.getElementById('price' + i);
+                const laborField = document.getElementById('labor' + i);
+                
+                if (qtyField) {
+                    qtyField.addEventListener('input', schedulePricingUpdate);
+                    qtyField.addEventListener('change', schedulePricingUpdate);
+                }
+                if (priceField) {
+                    priceField.addEventListener('input', schedulePricingUpdate);
+                    priceField.addEventListener('change', schedulePricingUpdate);
+                }
+                if (laborField) {
+                    laborField.addEventListener('input', schedulePricingUpdate);
+                    laborField.addEventListener('change', schedulePricingUpdate);
                 }
             }
             
@@ -3351,11 +3742,17 @@
                 // Load company info for this company
                 loadCompanyInfo();
                 
+                // Load shop settings
+                loadShopSettings();
+                
                 // Monitor connection state
                 setupConnectionMonitoring();
                 
                 // NOW fetch work orders after companyId is set
                 fetchEntries();
+                
+                // Initialize quick jobs bar
+                setTimeout(() => refreshQuickJobsBar(), 500);
             }
 
             function loadCompanyInfo() {
@@ -3367,6 +3764,7 @@
                         if (companyInfo.company_name) document.getElementById('company_name').textContent = companyInfo.company_name;
                         if (companyInfo.company_address) document.getElementById('company_address').textContent = companyInfo.company_address;
                         if (companyInfo.company_contact) document.getElementById('company_contact').textContent = companyInfo.company_contact;
+                        if (companyInfo.company_contact2) document.getElementById('company_contact2').textContent = companyInfo.company_contact2;
                         if (companyInfo.company_website) document.getElementById('company_website').textContent = companyInfo.company_website;
                         console.log('✅ Loaded company info from Firebase - hiding button');
                         document.getElementById('save-company-btn').style.display = 'none';
@@ -3382,6 +3780,771 @@
                     document.getElementById('company-hint').style.display = 'block';
                 });
             }
+
+            // ===== SHOP SETTINGS FUNCTIONS (Make global for onclick handlers) =====
+            window.loadShopSettings = function() {
+                console.log('[SETTINGS] Loading shop settings for company:', companyId);
+                database.ref('shopSettings/' + companyId).once('value').then(snapshot => {
+                    const settings = snapshot.val();
+                    console.log('[SETTINGS] Loaded settings:', settings);
+                    if (settings) {
+                        if (settings.laborRate) {
+                            document.getElementById('labor-rate-setting').value = settings.laborRate;
+                        }
+                        if (settings.taxRate) {
+                            document.getElementById('tax-rate-setting').value = settings.taxRate;
+                        }
+                        // Load dynamic fees
+                        const feesList = document.getElementById('shop-fees-list');
+                        feesList.innerHTML = '';
+                        if (settings.shopFees) {
+                            Object.entries(settings.shopFees).forEach(([key, fee]) => {
+                                addShopFeeRow(fee.name, fee.amount, key);
+                            });
+                        }
+                    }
+                }).catch(err => {
+                    console.error('Error loading shop settings:', err);
+                });
+            }
+
+            window.saveShopSettings = function() {
+                console.log('[SETTINGS] Saving shop settings for company:', companyId);
+                const laborRate = parseFloat(document.getElementById('labor-rate-setting').value) || 0;
+                const taxRate = parseFloat(document.getElementById('tax-rate-setting').value) || 0;
+                
+                // Collect all shop fees
+                const shopFees = {};
+                const feeRows = document.querySelectorAll('.shop-fee-row');
+                feeRows.forEach((row, index) => {
+                    const name = row.querySelector('.fee-name').value.trim();
+                    const amount = parseFloat(row.querySelector('.fee-amount').value) || 0;
+                    if (name && amount > 0) {
+                        const key = row.dataset.key || 'fee_' + Date.now() + '_' + index;
+                        shopFees[key] = { name: name, amount: amount };
+                    }
+                });
+                
+                console.log('[SETTINGS] Values - Labor:', laborRate, 'Tax:', taxRate, 'Fees:', shopFees);
+                
+                database.ref('shopSettings/' + companyId).update({
+                    laborRate: laborRate,
+                    taxRate: taxRate,
+                    shopFees: shopFees
+                }).then(() => {
+                    alert('Settings saved successfully!');
+                    closeSettingsModal();
+                    // Recalculate totals with new settings
+                    calculateTotals();
+                }).catch(err => {
+                    console.error('Error saving settings:', err);
+                    alert('Error saving settings: ' + err.message);
+                });
+            }
+            
+            window.addShopFee = function() {
+                addShopFeeRow('', 0);
+            }
+            
+            window.addShopFeeRow = function(name = '', amount = 0, key = '') {
+                const feesList = document.getElementById('shop-fees-list');
+                const row = document.createElement('div');
+                row.className = 'shop-fee-row';
+                if (key) row.dataset.key = key;
+                row.style.cssText = 'display:grid;grid-template-columns:2fr 1fr auto;gap:8px;margin-bottom:8px;align-items:center;';
+                
+                row.innerHTML = `
+                    <input type="text" class="fee-name" value="${name}" placeholder="Fee name (e.g., Hazmat Fee)" 
+                           style="padding:8px;border:1px solid #404040;border-radius:4px;background:#2d2d2d;color:#fff;">
+                    <input type="number" class="fee-amount" value="${amount}" step="0.01" placeholder="Amount" 
+                           style="padding:8px;border:1px solid #404040;border-radius:4px;background:#2d2d2d;color:#fff;">
+                    <button onclick="this.parentElement.remove()" class="btn-professional" 
+                            style="background:#dc3545;padding:8px 12px;font-size:12px;">✖</button>
+                `;
+                
+                feesList.appendChild(row);
+            }
+            
+            window.saveCompanyInfoFromSettings = function() {
+                // First ask for password
+                const password = prompt('Enter your password to save company info:');
+                
+                if (!password) {
+                    return; // User cancelled
+                }
+                
+                // Verify password against Firebase Auth
+                const user = firebase.auth().currentUser;
+                if (!user || !user.email) {
+                    alert('You must be signed in to save company info.');
+                    return;
+                }
+                
+                // Re-authenticate user with their password
+                const credential = firebase.auth.EmailAuthProvider.credential(user.email, password);
+                
+                user.reauthenticateWithCredential(credential).then(() => {
+                    // Password is correct, proceed with confirmation
+                    if (!confirm('⚠️ Are you sure you want to save the current company information as the default?\n\nThis will update:\n• Company Name\n• Address\n• Phone/Fax\n• Email\n• Website\n\nThis change will affect all future work orders.')) {
+                        return;
+                    }
+                    
+                    const companyInfo = {
+                        company_name: document.getElementById('company_name').textContent || '',
+                        company_address: document.getElementById('company_address').textContent || '',
+                        company_contact: document.getElementById('company_contact').textContent || '',
+                        company_contact2: document.getElementById('company_contact2').textContent || '',
+                        company_website: document.getElementById('company_website').textContent || ''
+                    };
+                    
+                    database.ref('shopSettings/' + companyId + '/companyInfo').set(companyInfo).then(() => {
+                        alert('✅ Company information saved successfully!');
+                    }).catch(err => {
+                        alert('Error saving company info: ' + err.message);
+                    });
+                }).catch(error => {
+                    // Password is incorrect or other error
+                    alert('Incorrect password. Company info not saved.');
+                    console.error('Re-authentication error:', error);
+                });
+            }
+
+            window.closeSettingsModal = function() {
+                document.getElementById('settings-modal').style.display = 'none';
+            }
+            
+            // ===== FEE SELECTOR FUNCTIONS =====
+            
+            window.openFeeSelector = function() {
+                const modal = document.getElementById('fee-selector-modal');
+                const checkboxContainer = document.getElementById('fee-checkboxes');
+                checkboxContainer.innerHTML = '';
+                
+                // Load available fees from settings
+                if (typeof database !== 'undefined' && companyId) {
+                    database.ref('shopSettings/' + companyId + '/shopFees').once('value').then(snapshot => {
+                        const fees = snapshot.val();
+                        if (fees && Object.keys(fees).length > 0) {
+                            Object.entries(fees).forEach(([key, fee]) => {
+                                const isChecked = selectedFees.includes(key);
+                                const checkbox = document.createElement('label');
+                                checkbox.style.cssText = 'display:block;margin-bottom:12px;cursor:pointer;padding:8px;background:#2a2a2a;border-radius:4px;';
+                                checkbox.innerHTML = `
+                                    <input type="checkbox" value="${key}" ${isChecked ? 'checked' : ''} 
+                                           style="margin-right:8px;">
+                                    <span style="font-size:14px;">${fee.name}</span>
+                                    <span style="float:right;color:#00ff88;font-weight:bold;">$${fee.amount.toFixed(2)}</span>
+                                `;
+                                checkboxContainer.appendChild(checkbox);
+                            });
+                            modal.style.display = 'block';
+                        } else {
+                            alert('No shop fees configured. Please add fees in Settings first.');
+                        }
+                    });
+                } else {
+                    alert('Please wait for the system to connect to Firebase.');
+                }
+            }
+            
+            window.applySelectedFees = function() {
+                const checkboxes = document.querySelectorAll('#fee-checkboxes input[type="checkbox"]');
+                selectedFees = Array.from(checkboxes)
+                    .filter(cb => cb.checked)
+                    .map(cb => cb.value);
+                
+                // Update the shop fees field text to show selected fees
+                const shopFeesField = document.getElementById('shop_fees');
+                if (selectedFees.length > 0) {
+                    shopFeesField.placeholder = `${selectedFees.length} fee(s) selected`;
+                } else {
+                    shopFeesField.placeholder = 'Click to select fees';
+                }
+                
+                closeFeeSelector();
+                calculateTotals(); // Recalculate with selected fees
+            }
+            
+            window.closeFeeSelector = function() {
+                document.getElementById('fee-selector-modal').style.display = 'none';
+            }
+
+            // ===== CANNED JOBS FUNCTIONS (Make global for onclick handlers) =====
+            window.loadCannedJobs = function() {
+                console.log('[CANNED JOBS] Loading canned jobs for company:', companyId);
+                
+                // Initialize form with one empty part row if empty
+                if (document.getElementById('parts-list').children.length === 0) {
+                    loadPartsIntoForm('', '', '');
+                }
+                
+                database.ref('cannedJobs/' + companyId).once('value').then(snapshot => {
+                    const jobs = snapshot.val();
+                    console.log('[CANNED JOBS] Loaded jobs:', jobs);
+                    const listDiv = document.getElementById('canned-jobs-list');
+                    listDiv.innerHTML = '';
+                    
+                    if (jobs) {
+                        Object.keys(jobs).forEach(key => {
+                            const job = jobs[key];
+                            const jobDiv = document.createElement('div');
+                            jobDiv.style.cssText = 'border:1px solid #404040;padding:12px;margin-bottom:12px;border-radius:4px;background:#2d2d2d;';
+                            
+                            const favoriteIcon = job.isFavorite ? '⭐' : '';
+                            const category = job.category || 'Other';
+                            const shortcode = job.shortcode || '';
+                            const prices = job.partPrices || '';
+                            
+                            jobDiv.innerHTML = `
+                                <div style="display:flex;justify-content:space-between;align-items:start;">
+                                    <div style="flex:1;">
+                                        <strong style="font-size:16px;">${favoriteIcon} ${job.name}</strong>
+                                        <span style="background:#404040;padding:2px 8px;border-radius:4px;font-size:11px;margin-left:8px;">${category}</span>
+                                        ${shortcode ? '<span style="color:#00bfff;font-size:12px;margin-left:8px;">' + shortcode + '</span>' : ''}<br>
+                                        <span style="color:#888;font-size:12px;">Parts:</span> ${job.parts || 'None'}<br>
+                                        ${prices ? '<span style="color:#888;font-size:12px;">Prices:</span> $' + prices + '<br>' : ''}
+                                        <span style="color:#888;font-size:12px;">Labor:</span> ${job.hours || 0} hrs
+                                        ${job.perUnit ? '<br><span style="color:#ffc107;font-size:12px;">⚠️ Per Unit Job</span>' : ''}
+                                    </div>
+                                    <div style="display:flex;gap:4px;flex-shrink:0;">
+                                        <button class="btn-professional" onclick="applyCannedJob('${key}')" style="font-size:12px;padding:6px 12px;">Apply</button>
+                                        <button class="btn-professional" onclick="editCannedJob('${key}')" style="font-size:12px;padding:6px 12px;">Edit</button>
+                                        <button class="btn-professional" onclick="deleteCannedJob('${key}')" style="font-size:12px;padding:6px 12px;">Delete</button>
+                                    </div>
+                                </div>
+                            `;
+                            listDiv.appendChild(jobDiv);
+                        });
+                    } else {
+                        listDiv.innerHTML = '<p style="color:#888;">No canned jobs yet. Add one below!</p>';
+                    }
+                    
+                    // Refresh quick-bar if visible
+                    refreshQuickJobsBar();
+                }).catch(err => {
+                    console.error('Error loading canned jobs:', err);
+                });
+            }
+
+            window.saveJob = function() {
+                const editKey = document.getElementById('edit-job-key').value;
+                const isEditing = editKey !== '';
+                
+                console.log('[CANNED JOBS]', isEditing ? 'Updating' : 'Adding', 'canned job');
+                
+                const name = document.getElementById('new-job-name').value.trim();
+                const category = document.getElementById('new-job-category').value;
+                const partsData = getPartsData();
+                const hours = parseFloat(document.getElementById('new-job-hours').value) || 0;
+                const shortcode = document.getElementById('new-job-shortcode').value.trim();
+                const isFavorite = document.getElementById('new-job-favorite').checked;
+                const perUnit = document.getElementById('new-job-perunit').checked;
+                
+                if (!name) {
+                    alert('Please enter a job name');
+                    return;
+                }
+                
+                const jobData = {
+                    name: name,
+                    category: category,
+                    partQuantities: partsData.quantities,
+                    parts: partsData.parts,
+                    partPrices: partsData.prices,
+                    hours: hours,
+                    shortcode: shortcode,
+                    isFavorite: isFavorite,
+                    perUnit: perUnit
+                };
+                
+                const jobRef = isEditing 
+                    ? database.ref('cannedJobs/' + companyId + '/' + editKey)
+                    : database.ref('cannedJobs/' + companyId).push();
+                
+                jobRef.set(jobData).then(() => {
+                    clearJobForm();
+                    loadCannedJobs();
+                    alert(isEditing ? 'Job updated successfully!' : 'Job added successfully!');
+                }).catch(err => {
+                    console.error('Error saving canned job:', err);
+                    alert('Error saving job: ' + err.message);
+                });
+            }
+            
+            window.editCannedJob = function(jobKey) {
+                console.log('[CANNED JOBS] Editing job:', jobKey);
+                database.ref('cannedJobs/' + companyId + '/' + jobKey).once('value').then(snapshot => {
+                    const job = snapshot.val();
+                    if (job) {
+                        document.getElementById('edit-job-key').value = jobKey;
+                        document.getElementById('new-job-name').value = job.name || '';
+                        document.getElementById('new-job-category').value = job.category || 'Other';
+                        loadPartsIntoForm(job.partQuantities || '', job.parts || '', job.partPrices || '');
+                        document.getElementById('new-job-hours').value = job.hours || 0;
+                        document.getElementById('new-job-shortcode').value = job.shortcode || '';
+                        document.getElementById('new-job-favorite').checked = job.isFavorite || false;
+                        document.getElementById('new-job-perunit').checked = job.perUnit || false;
+                        
+                        document.getElementById('job-form-title').textContent = 'Edit Canned Job';
+                        document.getElementById('save-job-btn').textContent = 'Update Job';
+                        document.getElementById('cancel-edit-btn').style.display = 'inline-block';
+                        
+                        // Scroll to form
+                        document.getElementById('job-form-title').scrollIntoView({ behavior: 'smooth' });
+                    }
+                });
+            }
+            
+            window.cancelEdit = function() {
+                clearJobForm();
+            }
+            
+            function clearJobForm() {
+                document.getElementById('edit-job-key').value = '';
+                document.getElementById('new-job-name').value = '';
+                document.getElementById('new-job-category').value = 'Maintenance';
+                loadPartsIntoForm('', '', ''); // Reset to one empty part row
+                document.getElementById('new-job-hours').value = '';
+                document.getElementById('new-job-shortcode').value = '';
+                document.getElementById('new-job-favorite').checked = false;
+                document.getElementById('new-job-perunit').checked = false;
+                
+                document.getElementById('job-form-title').textContent = 'Add New Canned Job';
+                document.getElementById('save-job-btn').textContent = 'Add Job';
+                document.getElementById('cancel-edit-btn').style.display = 'none';
+            }
+            
+            // Undo functionality
+            let undoState = null;
+            
+            function saveUndoState() {
+                const state = {};
+                // Save all form fields
+                for (let i = 1; i <= 22; i++) {
+                    state['part' + i] = document.getElementById('part' + i)?.value || '';
+                    state['qty' + i] = document.getElementById('qty' + i)?.value || '';
+                    state['price' + i] = document.getElementById('price' + i)?.value || '';
+                    state['labor' + i] = document.getElementById('labor' + i)?.value || '';
+                }
+                undoState = state;
+                console.log('[UNDO] State saved');
+            }
+            
+            window.undoLastAction = function() {
+                if (!undoState) {
+                    alert('Nothing to undo');
+                    return;
+                }
+                
+                if (!confirm('Undo last quick job addition?')) {
+                    return;
+                }
+                
+                // Restore all form fields
+                for (let i = 1; i <= 22; i++) {
+                    const partField = document.getElementById('part' + i);
+                    const qtyField = document.getElementById('qty' + i);
+                    const priceField = document.getElementById('price' + i);
+                    const laborField = document.getElementById('labor' + i);
+                    
+                    if (partField) partField.value = undoState['part' + i] || '';
+                    if (qtyField) qtyField.value = undoState['qty' + i] || '';
+                    if (priceField) priceField.value = undoState['price' + i] || '';
+                    if (laborField) laborField.value = undoState['labor' + i] || '';
+                }
+                
+                // Trigger recalculation
+                if (typeof calculateTotals === 'function') {
+                    calculateTotals();
+                }
+                
+                // Hide undo button and clear state
+                const undoBtn = document.getElementById('undo-btn');
+                const undoBtnWidget = document.getElementById('undo-btn-widget');
+                const menuUndoBtn = document.getElementById('menu-undo-btn');
+                
+                if (undoBtn) undoBtn.style.display = 'none';
+                if (menuUndoBtn) menuUndoBtn.style.display = 'none';
+                if (undoBtnWidget) undoBtnWidget.style.display = 'none';
+                undoState = null;
+                console.log('[UNDO] State restored');
+            }
+
+            window.applyCannedJob = function(jobKey, fromQuickBar = false) {
+                console.log('[CANNED JOBS] Applying canned job:', jobKey);
+                
+                // Save current state for undo
+                saveUndoState();
+                
+                database.ref('cannedJobs/' + companyId + '/' + jobKey).once('value').then(snapshot => {
+                    const job = snapshot.val();
+                    if (job) {
+                        console.log('[CANNED JOBS] Job data:', job);
+                        
+                        // Check if this is a per-unit job
+                        let quantity = 1;
+                        if (job.perUnit) {
+                            const qtyInput = prompt('How many units? (e.g., 4 for all wheels)', '1');
+                            if (qtyInput === null) return; // User cancelled
+                            quantity = parseInt(qtyInput) || 1;
+                        }
+                        
+                        // Track recent job usage
+                        trackRecentJob(jobKey);
+                        
+                        // Find the first completely empty row to start adding parts
+                        let startRow = -1;
+                        for (let i = 1; i <= 22; i++) {
+                            const partField = document.getElementById('part' + i);
+                            const qtyField = document.getElementById('qty' + i);
+                            const priceField = document.getElementById('price' + i);
+                            const laborField = document.getElementById('labor' + i);
+                            
+                            // Check if this row is completely empty
+                            const isEmpty = (!partField || !partField.value.trim()) &&
+                                          (!qtyField || !qtyField.value.trim()) &&
+                                          (!priceField || !priceField.value.trim()) &&
+                                          (!laborField || !laborField.value.trim());
+                            
+                            if (isEmpty) {
+                                startRow = i;
+                                break;
+                            }
+                        }
+                        
+                        if (startRow === -1) {
+                            alert('No empty rows available. Please clear some rows first.');
+                            return;
+                        }
+                        
+                        // Add all parts starting from the empty row
+                        let partAdded = false;
+                        if (job.parts) {
+                            const quantitiesArray = job.partQuantities ? job.partQuantities.split(',') : [];
+                            const partsArray = job.parts.split(',');
+                            const pricesArray = job.partPrices ? job.partPrices.split(',') : [];
+                            
+                            for (let partIndex = 0; partIndex < partsArray.length && (startRow + partIndex) <= 22; partIndex++) {
+                                const rowNum = startRow + partIndex;
+                                const partField = document.getElementById('part' + rowNum);
+                                const qtyField = document.getElementById('qty' + rowNum);
+                                const priceField = document.getElementById('price' + rowNum);
+                                
+                                if (partField) {
+                                    partField.value = partsArray[partIndex].trim();
+                                    if (qtyField && quantitiesArray[partIndex]) {
+                                        const baseQty = parseFloat(quantitiesArray[partIndex].trim()) || 1;
+                                        qtyField.value = baseQty * quantity;
+                                    } else if (qtyField) {
+                                        qtyField.value = quantity;
+                                    }
+                                    if (priceField && pricesArray[partIndex]) {
+                                        priceField.value = parseFloat(pricesArray[partIndex].trim()) || '';
+                                    }
+                                    partAdded = true;
+                                    console.log('[CANNED JOBS] Added part to row', rowNum, ':', partsArray[partIndex]);
+                                }
+                            }
+                        }
+                        
+                        // Add labor hours to the first row of this job (same starting row)
+                        let laborAdded = false;
+                        if (job.hours > 0) {
+                            const laborField = document.getElementById('labor' + startRow);
+                            if (laborField) {
+                                laborField.value = job.hours * quantity;
+                                laborAdded = true;
+                                console.log('[CANNED JOBS] Added labor to row', startRow, ':', job.hours * quantity, 'hrs');
+                            }
+                        }
+                        
+                        if (partAdded || laborAdded) {
+                            // Trigger pricing calculation after adding job
+                            setTimeout(() => {
+                                if (typeof calculateTotals === 'function') {
+                                    calculateTotals();
+                                }
+                            }, 100);
+                            
+                            // Show undo button
+                            const undoBtn = document.getElementById('undo-btn');
+                            const undoBtnWidget = document.getElementById('undo-btn-widget');
+                            
+                            if (undoBtn) undoBtn.style.display = 'inline-block';
+                            const menuUndoBtn = document.getElementById('menu-undo-btn');
+                            if (menuUndoBtn) menuUndoBtn.style.display = 'block';
+                            if (undoBtnWidget) undoBtnWidget.style.display = 'block';
+                            
+                            alert('Canned job "' + job.name + '" added to work order!');
+                        } else {
+                            alert('No empty rows available. Please clear some rows first.');
+                        }
+                        
+                        closeCannedJobsModal();
+                    }
+                }).catch(err => {
+                    console.error('Error applying canned job:', err);
+                    alert('Error applying job: ' + err.message);
+                });
+            }
+
+            window.deleteCannedJob = function(jobKey) {
+                if (confirm('Delete this canned job?')) {
+                    database.ref('cannedJobs/' + companyId + '/' + jobKey).remove().then(() => {
+                        loadCannedJobs();
+                    }).catch(err => {
+                        console.error('Error deleting canned job:', err);
+                        alert('Error deleting job: ' + err.message);
+                    });
+                }
+            }
+
+            window.closeCannedJobsModal = function() {
+                document.getElementById('canned-jobs-modal').style.display = 'none';
+            }
+            
+            // Dynamic Part Row Management
+            let partRowCount = 0;
+            
+            window.addPartRow = function(partQty = '', partName = '', partPrice = '') {
+                partRowCount++;
+                const partsList = document.getElementById('parts-list');
+                const rowDiv = document.createElement('div');
+                rowDiv.className = 'part-row';
+                rowDiv.id = 'part-row-' + partRowCount;
+                rowDiv.style.cssText = 'display:grid;grid-template-columns:80px 1fr auto auto 40px;gap:8px;margin-bottom:8px;align-items:center;';
+                
+                rowDiv.innerHTML = `
+                    <input type="number" class="part-qty-input" placeholder="Qty" step="0.1" value="${partQty}" style="padding:8px;border:1px solid #404040;border-radius:4px;background:#1e1e1e;color:#fff;font-size:13px;">
+                    <input type="text" class="part-name-input" placeholder="Part name" value="${partName}" style="padding:8px;border:1px solid #404040;border-radius:4px;background:#1e1e1e;color:#fff;font-size:13px;">
+                    <span style="color:#666;font-size:13px;">$</span>
+                    <input type="number" class="part-price-input" placeholder="0.00" step="0.01" value="${partPrice}" style="width:100px;padding:8px;border:1px solid #404040;border-radius:4px;background:#1e1e1e;color:#fff;font-size:13px;">
+                    <button onclick="removePartRow(${partRowCount})" style="background:#ff4444;border:none;color:#fff;border-radius:4px;cursor:pointer;padding:8px;font-size:12px;">✕</button>
+                `;
+                
+                partsList.appendChild(rowDiv);
+            }
+            
+            window.removePartRow = function(rowId) {
+                const row = document.getElementById('part-row-' + rowId);
+                if (row) row.remove();
+            }
+            
+            function getPartsData() {
+                const partQuantities = [];
+                const partNames = [];
+                const partPrices = [];
+                
+                document.querySelectorAll('.part-name-input').forEach((input, index) => {
+                    const name = input.value.trim();
+                    if (name) {
+                        const qtyInput = document.querySelectorAll('.part-qty-input')[index];
+                        const priceInput = document.querySelectorAll('.part-price-input')[index];
+                        const qty = qtyInput ? (parseFloat(qtyInput.value) || 1) : 1;
+                        const price = priceInput ? (parseFloat(priceInput.value) || 0).toFixed(2) : '0.00';
+                        partQuantities.push(qty);
+                        partNames.push(name);
+                        partPrices.push(price);
+                    }
+                });
+                
+                return {
+                    quantities: partQuantities.join(', '),
+                    parts: partNames.join(', '),
+                    prices: partPrices.join(', ')
+                };
+            }
+            
+            function loadPartsIntoForm(quantitiesString, partsString, pricesString) {
+                // Clear existing part rows
+                document.getElementById('parts-list').innerHTML = '';
+                partRowCount = 0;
+                
+                if (!partsString) {
+                    addPartRow(); // Add one empty row
+                    return;
+                }
+                
+                const quantities = quantitiesString ? quantitiesString.split(',').map(q => q.trim()) : [];
+                const parts = partsString.split(',').map(p => p.trim());
+                const prices = pricesString ? pricesString.split(',').map(p => p.trim()) : [];
+                
+                parts.forEach((part, index) => {
+                    const qty = quantities[index] || '1';
+                    const price = prices[index] || '';
+                    addPartRow(qty, part, price);
+                });
+            }
+            
+            // Quick Jobs Bar functionality
+            let recentJobsCache = [];
+            
+            function trackRecentJob(jobKey) {
+                // Add to recent jobs (max 5)
+                recentJobsCache = recentJobsCache.filter(k => k !== jobKey);
+                recentJobsCache.unshift(jobKey);
+                recentJobsCache = recentJobsCache.slice(0, 5);
+                // Save to localStorage
+                localStorage.setItem('recentJobs_' + companyId, JSON.stringify(recentJobsCache));
+                refreshQuickJobsBar();
+            }
+            
+            function loadRecentJobs() {
+                const saved = localStorage.getItem('recentJobs_' + companyId);
+                if (saved) {
+                    recentJobsCache = JSON.parse(saved);
+                }
+            }
+            
+            function refreshQuickJobsBar() {
+                if (!companyId) return;
+                
+                database.ref('cannedJobs/' + companyId).once('value').then(snapshot => {
+                    const jobs = snapshot.val();
+                    if (!jobs) {
+                        return;
+                    }
+                    
+                    // Populate favorites in menu
+                    const menuFavoritesDiv = document.getElementById('menu-favorite-jobs');
+                    if (menuFavoritesDiv) {
+                        menuFavoritesDiv.innerHTML = '';
+                        let hasFavorites = false;
+                        Object.keys(jobs).forEach(key => {
+                            if (jobs[key].isFavorite) {
+                                hasFavorites = true;
+                                const btn = document.createElement('button');
+                                btn.textContent = jobs[key].name;
+                                btn.onclick = () => applyCannedJob(key, true);
+                                menuFavoritesDiv.appendChild(btn);
+                            }
+                        });
+                        if (!hasFavorites) {
+                            menuFavoritesDiv.innerHTML = '<button disabled style="opacity:0.5;cursor:default;">No favorites yet</button>';
+                        }
+                    }
+                    
+                    // Populate recent jobs in menu
+                    const menuRecentDiv = document.getElementById('menu-recent-jobs');
+                    if (menuRecentDiv) {
+                        menuRecentDiv.innerHTML = '';
+                        loadRecentJobs();
+                        if (recentJobsCache.length > 0) {
+                            recentJobsCache.forEach(key => {
+                                if (jobs[key]) {
+                                    const btn = document.createElement('button');
+                                    btn.textContent = jobs[key].name;
+                                    btn.onclick = () => applyCannedJob(key, true);
+                                    menuRecentDiv.appendChild(btn);
+                                }
+                            });
+                        } else {
+                            menuRecentDiv.innerHTML = '<button disabled style="opacity:0.5;cursor:default;">No recent jobs yet</button>';
+                        }
+                    }
+                }).catch(err => {
+                    console.error('Error refreshing quick-bar:', err);
+                });
+            }
+            
+            window.showJobsInMenuByCategory = function(category) {
+                // This opens the manage canned jobs modal filtered by category
+                document.getElementById('canned-jobs-modal').style.display = 'block';
+                loadCannedJobs();
+            }
+            
+            window.showJobsInMenuByCategory = function(category) {
+                // This opens the manage canned jobs modal filtered by category
+                document.getElementById('canned-jobs-modal').style.display = 'block';
+                loadCannedJobs();
+            }
+            
+            window.showJobsByCategory = function(category) {
+                database.ref('cannedJobs/' + companyId).once('value').then(snapshot => {
+                    const jobs = snapshot.val();
+                    if (!jobs) return;
+                    
+                    const resultsDiv = document.getElementById('search-results-buttons');
+                    const resultsSection = document.getElementById('search-results-section');
+                    resultsDiv.innerHTML = '';
+                    
+                    let found = false;
+                    Object.keys(jobs).forEach(key => {
+                        if (category === 'all' || jobs[key].category === category) {
+                            found = true;
+                            const btn = document.createElement('button');
+                            btn.className = 'btn-professional';
+                            btn.style.cssText = 'font-size:11px;padding:6px 10px;margin:2px;width:calc(50% - 4px);';
+                            btn.textContent = jobs[key].name;
+                            btn.onclick = () => applyCannedJob(key, true);
+                            resultsDiv.appendChild(btn);
+                        }
+                    });
+                    
+                    if (found) {
+                        resultsSection.style.display = 'block';
+                    } else {
+                        resultsSection.style.display = 'none';
+                    }
+                });
+            }
+            
+            // Quick job search
+            document.addEventListener('DOMContentLoaded', function() {
+                const searchInput = document.getElementById('quick-job-search');
+                if (searchInput) {
+                    searchInput.addEventListener('input', function() {
+                        const query = this.value.toLowerCase().trim();
+                        if (!query) {
+                            document.getElementById('search-results-section').style.display = 'none';
+                            return;
+                        }
+                        
+                        database.ref('cannedJobs/' + companyId).once('value').then(snapshot => {
+                            const jobs = snapshot.val();
+                            if (!jobs) return;
+                            
+                            const resultsDiv = document.getElementById('search-results-buttons');
+                            const resultsSection = document.getElementById('search-results-section');
+                            resultsDiv.innerHTML = '';
+                            
+                            let found = false;
+                            Object.keys(jobs).forEach(key => {
+                                const job = jobs[key];
+                                const matchName = job.name.toLowerCase().includes(query);
+                                const matchShortcode = job.shortcode && job.shortcode.toLowerCase().includes(query);
+                                const matchParts = job.parts && job.parts.toLowerCase().includes(query);
+                                const matchCategory = job.category && job.category.toLowerCase().includes(query);
+                                
+                                if (matchName || matchShortcode || matchParts || matchCategory) {
+                                    found = true;
+                                    const btn = document.createElement('button');
+                                    btn.className = 'btn-professional';
+                                    btn.style.cssText = 'font-size:11px;padding:6px 10px;margin:2px;width:calc(50% - 4px);';
+                                    btn.textContent = job.name + (job.shortcode ? ' ' + job.shortcode : '');
+                                    btn.onclick = () => applyCannedJob(key, true);
+                                    resultsDiv.appendChild(btn);
+                                }
+                            });
+                            
+                            if (found) {
+                                resultsSection.style.display = 'block';
+                            } else {
+                                resultsDiv.innerHTML = '<span style="color:#666;font-size:12px;">No jobs found</span>';
+                                resultsSection.style.display = 'block';
+                            }
+                        });
+                    });
+                    
+                    // Keyboard shortcut: Ctrl+J to focus search
+                    document.addEventListener('keydown', function(e) {
+                        if (e.ctrlKey && e.key === 'j') {
+                            e.preventDefault();
+                            searchInput.focus();
+                        }
+                    });
+                }
+            });
 
             function setupConnectionMonitoring() {
                 const connectedRef = database.ref('.info/connected');
@@ -4008,11 +5171,18 @@ function disableForm(lockedByName) {
     statusDiv.style.fontWeight = 'bold';
     statusDiv.classList.add('locked-readonly');
     
-    // Show force unlock button
-    const forceUnlockBtn = document.getElementById('force-unlock-btn');
-    forceUnlockBtn.classList.add('visible');
+    // Update menu bar status
+    let menuStatus = document.getElementById('menu-status');
+    if (menuStatus) {
+        menuStatus.textContent = '� Locked by: ' + lockedByName;
+        menuStatus.classList.add('locked-readonly');
+    }
     
-    if (DEBUG_LOCK_MODE) console.log('� Form disabled - locked by:', lockedByName);
+    // Show force unlock button
+            const forceUnlockBtn = document.getElementById('force-unlock-btn');
+            forceUnlockBtn.classList.add('visible');
+            const menuForceUnlockBtn = document.getElementById('menu-force-unlock-btn');
+            if (menuForceUnlockBtn) menuForceUnlockBtn.classList.add('visible');    if (DEBUG_LOCK_MODE) console.log('� Form disabled - locked by:', lockedByName);
 }
 
 // Enable form (editable mode)
@@ -4050,11 +5220,18 @@ function enableForm() {
     statusDiv.style.fontWeight = 'normal';
     statusDiv.classList.remove('locked-readonly');
     
-    // Hide force unlock button
-    const forceUnlockBtn = document.getElementById('force-unlock-btn');
-    forceUnlockBtn.classList.remove('visible');
+    // Update menu bar status
+    let menuStatus = document.getElementById('menu-status');
+    if (menuStatus) {
+        menuStatus.textContent = '✏️ You are editing';
+        menuStatus.classList.remove('locked-readonly');
+    }
     
-    if (DEBUG_LOCK_MODE) console.log('✅ Form enabled - you have control');
+    // Hide force unlock button
+            const forceUnlockBtn = document.getElementById('force-unlock-btn');
+            forceUnlockBtn.classList.remove('visible');
+            const menuForceUnlockBtn = document.getElementById('menu-force-unlock-btn');
+            if (menuForceUnlockBtn) menuForceUnlockBtn.classList.remove('visible');    if (DEBUG_LOCK_MODE) console.log('✅ Form enabled - you have control');
 }
 
 // Real-time sync - watch for updates to current work order
@@ -4149,9 +5326,16 @@ function startWatchingWorkOrder(workOrderNumber) {
                 } else if (currentLockStatus !== 'locked-by-other') {
                     document.getElementById('save-status').textContent = '� ' + (updatedData.lockedByName || 'Another user') + ' started editing';
                     document.getElementById('save-status').style.color = '#ff4757';
+                    let menuStatus = document.getElementById('menu-status');
+                    if (menuStatus) {
+                        menuStatus.textContent = '� ' + (updatedData.lockedByName || 'Another user') + ' started editing';
+                        menuStatus.classList.add('locked-readonly');
+                    }
                     setTimeout(() => {
                         if (currentLockStatus === 'locked-by-other') {
                             document.getElementById('save-status').textContent = '� Locked by: ' + (updatedData.lockedByName || 'Another user');
+                            let menuStatus = document.getElementById('menu-status');
+                            if (menuStatus) menuStatus.textContent = '� Locked by: ' + (updatedData.lockedByName || 'Another user');
                         }
                     }, 3000);
                     disableForm(updatedData.lockedByName || 'Another user');
@@ -4167,8 +5351,11 @@ function startWatchingWorkOrder(workOrderNumber) {
                         enableForm(); // Must explicitly enable form
                         document.getElementById('save-status').textContent = '✅ Work order unlocked - reloaded with latest changes';
                         document.getElementById('save-status').style.color = '#00ff88';
+                        let menuStatus = document.getElementById('menu-status');
+                        if (menuStatus) menuStatus.textContent = '✅ Unlocked';
                         setTimeout(() => {
                             document.getElementById('save-status').textContent = '✏️ You are editing';
+                            if (menuStatus) menuStatus.textContent = '✏️ You are editing';
                         }, 3000);
                     }).catch(err => {
                         console.error('Failed to acquire expired lock:', err);
@@ -4185,8 +5372,11 @@ function startWatchingWorkOrder(workOrderNumber) {
                 enableForm(); // Must explicitly enable form
                 document.getElementById('save-status').textContent = '✅ Work order unlocked - reloaded with latest changes';
                 document.getElementById('save-status').style.color = '#00ff88';
+                let menuStatus = document.getElementById('menu-status');
+                if (menuStatus) menuStatus.textContent = '✅ Unlocked';
                 setTimeout(() => {
                     document.getElementById('save-status').textContent = '✏️ You are editing';
+                    if (menuStatus) menuStatus.textContent = '✏️ You are editing';
                 }, 3000);
             }).catch(err => {
                 console.error('Failed to acquire released lock:', err);
@@ -4471,8 +5661,18 @@ function loadWorkOrderData(entry) {
         techNotesWidget.value = entry.tech_notes || '';
     }
     
+    // Restore selected shop fees
+    if (entry.selectedShopFees) {
+        selectedFees = entry.selectedShopFees;
+    } else {
+        selectedFees = [];
+    }
+    
     // Update timestamp
     lastKnownTimestamp = entry.timestamp;
+    
+    // Recalculate totals after loading data
+    setTimeout(() => calculateTotals(), 100);
     
     // Show reload status
     document.getElementById('save-status').textContent = 'Work order loaded successfully';
@@ -4480,8 +5680,12 @@ function loadWorkOrderData(entry) {
     setTimeout(function() { 
         if (currentLockStatus === 'locked-by-me') {
             document.getElementById('save-status').textContent = '✏️ You are editing';
+            let menuStatus = document.getElementById('menu-status');
+            if (menuStatus) menuStatus.textContent = '✏️ You are editing';
         } else {
             document.getElementById('save-status').textContent = '';
+            let menuStatus = document.getElementById('menu-status');
+            if (menuStatus) menuStatus.textContent = '';
         }
     }, 2000);
 }
@@ -4881,6 +6085,8 @@ entriesDropdown.addEventListener('change', function(e) {
         saveBtn.disabled = false;
         deleteEntryBtn.style.display = 'inline-block';
         deleteEntryBtn.disabled = false;
+        const menuDeleteBtn = document.getElementById('menu-delete-btn');
+        if (menuDeleteBtn) menuDeleteBtn.style.display = 'block';
         newOrderBtn.style.display = 'inline-block';
         newOrderBtn.disabled = false;
         document.getElementById('print-btn').disabled = false;
@@ -4888,9 +6094,16 @@ entriesDropdown.addEventListener('change', function(e) {
         document.getElementById('save-status').textContent = '✏️ You are editing';
         document.getElementById('save-status').style.color = '#00ff88';
         document.getElementById('save-status').classList.remove('locked-readonly');
+        let menuStatus = document.getElementById('menu-status');
+        if (menuStatus) {
+            menuStatus.textContent = '✏️ You are editing';
+            menuStatus.classList.remove('locked-readonly');
+        }
         
         // Hide force unlock button
         document.getElementById('force-unlock-btn').classList.remove('visible');
+        let menuForceUnlockBtn = document.getElementById('menu-force-unlock-btn');
+        if (menuForceUnlockBtn) menuForceUnlockBtn.classList.remove('visible');
         
         // Start watching for real-time updates (small delay for Edge to process state)
         setTimeout(() => startWatchingWorkOrder(key), 50);
@@ -4903,10 +6116,10 @@ entriesDropdown.addEventListener('change', function(e) {
             loadWorkOrderData(entry);
             
             saveBtn.textContent = 'Update';
-            deleteEntryBtn.style.display = 'inline-block';
-            newOrderBtn.style.display = 'inline-block';
-            
-            // Disable form (this sets currentLockStatus = 'locked-by-other')
+                        deleteEntryBtn.style.display = 'inline-block';
+                        newOrderBtn.style.display = 'inline-block';
+                        const menuDeleteBtn = document.getElementById('menu-delete-btn');
+                        if (menuDeleteBtn) menuDeleteBtn.style.display = 'block';            // Disable form (this sets currentLockStatus = 'locked-by-other')
             disableForm(error.lockedBy);
             
             // Start watching for real-time updates (small delay for Edge to process state)
@@ -4922,43 +6135,163 @@ entriesDropdown.addEventListener('change', function(e) {
 });
 
 deleteEntryBtn.addEventListener('click', function() {
-    if (!currentEditKey) return;
-    if (!confirm('Delete this entry?')) return;
+    if (!currentEditKey) {
+        alert('No work order is currently open.');
+        return;
+    }
     
-    // Release lock before deleting
-    releaseLock(currentEditKey).then(() => {
-        db.ref('repairOrders/' + currentEditKey).remove(function(error) {
-            if (error) {
-                alert('Error deleting entry!');
-            } else {
-                deleteEntryBtn.style.display = 'none';
-                newOrderBtn.style.display = 'none';
-                entriesDropdown.value = '';
-                currentEditKey = null;
-                currentWorkOrderNumber = null;
-                saveBtn.textContent = 'Save';
-                document.getElementById('save-status').textContent = 'Entry deleted.';
-                clearPartsFields();
-                const vinField = document.getElementById('vin_number');
-                if (vinField) vinField.value = '';
-            }
+    // First ask for password
+    const password = prompt('Enter your password to delete this work order:');
+    
+    if (!password) {
+        return; // User cancelled
+    }
+    
+    // Verify password against Firebase Auth
+    const user = firebase.auth().currentUser;
+    if (!user || !user.email) {
+        alert('You must be signed in to delete work orders.');
+        return;
+    }
+    
+    // Re-authenticate user with their password
+    const credential = firebase.auth.EmailAuthProvider.credential(user.email, password);
+    
+    user.reauthenticateWithCredential(credential).then(() => {
+        // Password is correct, proceed with confirmation
+        if (!confirm('Delete work order #' + currentEditKey + '?\n\nThis action cannot be undone.')) {
+            return;
+        }
+        
+        // Store the key to delete (in case it changes during async operations)
+        const keyToDelete = currentEditKey;
+        
+        // Release lock before deleting
+        releaseLock(keyToDelete).then(() => {
+            // Delete ONLY the specific work order
+            db.ref('repairOrders/' + keyToDelete).remove(function(error) {
+                if (error) {
+                    alert('Error deleting work order: ' + error.message);
+                } else {
+                    // Hide delete buttons
+                    deleteEntryBtn.style.display = 'none';
+                    const menuDeleteBtn = document.getElementById('menu-delete-btn');
+                    if (menuDeleteBtn) menuDeleteBtn.style.display = 'none';
+                    newOrderBtn.style.display = 'none';
+                    
+                    // Reset dropdown
+                    entriesDropdown.value = '';
+                    
+                    // Clear state
+                    currentEditKey = null;
+                    currentWorkOrderNumber = null;
+                    currentLockStatus = 'unlocked';
+                    saveBtn.textContent = 'Save';
+                    
+                    // Clear the entire form
+                    const form = document.getElementById('repair-order-form');
+                    clearPartsFields();
+                    
+                    // Clear all text inputs and textareas
+                    form.querySelectorAll('input[type="text"], textarea').forEach(input => {
+                        input.value = '';
+                    });
+                    
+                    // Clear all contenteditable fields EXCEPT company info
+                    const companyFields = ['company_name', 'company_address', 'company_contact', 'company_contact2', 'company_website'];
+                    form.querySelectorAll('[contenteditable="true"]').forEach(el => {
+                        if (!companyFields.includes(el.id)) {
+                            el.textContent = '';
+                        }
+                    });
+                    
+                    // Clear checkboxes
+                    form.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+                        cb.checked = false;
+                    });
+                    
+                    // Reset custom checkbox visual states
+                    document.querySelectorAll('.form-field-custom-checkbox').forEach(function(div) {
+                        div.classList.remove('checked');
+                    });
+                    
+                    // Set current date
+                    setCurrentDate();
+                    
+                    // Set default checkboxes
+                    setDefaultCheckboxes();
+                    
+                    // Generate new work order number
+                    generateNextWorkOrderNumber().then(() => {
+                        document.getElementById('save-status').textContent = 'Work order #' + keyToDelete + ' deleted. New work order ready.';
+                        setTimeout(() => {
+                            document.getElementById('save-status').textContent = '';
+                        }, 3000);
+                    });
+                    
+                    // Enable form for editing
+                    enableForm();
+                }
+            });
         });
+    }).catch(error => {
+        // Password is incorrect or other error
+        alert('Incorrect password. Work order not deleted.');
+        console.error('Re-authentication error:', error);
     });
 });
 
 // New Work Order button functionality
 document.getElementById('new-work-order-btn').addEventListener('click', async function() {
-    if (!confirm('Create a completely new work order? This will clear all current data.')) return;
-    
-    // Release lock on current work order
-    if (currentWorkOrderNumber) {
-        await releaseLock(currentWorkOrderNumber);
+    if (!confirm('Create a completely new work order? This will clear all current data.')) {
+        return;
     }
+    
+    try {
+        // Release lock on current work order
+        if (currentWorkOrderNumber) {
+            await releaseLock(currentWorkOrderNumber);
+        }
+    } catch (err) {
+        console.log('Lock release skipped:', err);
+    }
+    
+    // Stop watching the current work order
+    stopWatchingWorkOrder();
+    
+    // Reset UI state FIRST
+    currentEditKey = null;
+    currentWorkOrderNumber = null;
+    currentLockStatus = 'unlocked';
+    saveBtn.textContent = 'Save';
+    entriesDropdown.value = '';
+    entrySearch.value = '';
+    deleteEntryBtn.style.display = 'none';
+    const menuDeleteBtn = document.getElementById('menu-delete-btn');
+    if (menuDeleteBtn) menuDeleteBtn.style.display = 'none';
+    newOrderBtn.style.display = 'none';
     
     // Reset the entire form
     const form = document.getElementById('repair-order-form');
-    form.reset();
     clearPartsFields(); // Clear parts fields
+    
+    // Clear all text inputs and textareas
+    form.querySelectorAll('input[type="text"], textarea').forEach(input => {
+        input.value = '';
+    });
+    
+    // Clear all contenteditable fields EXCEPT company info
+    const companyFields = ['company_name', 'company_address', 'company_contact', 'company_contact2', 'company_website'];
+    form.querySelectorAll('[contenteditable="true"]').forEach(el => {
+        if (!companyFields.includes(el.id)) {
+            el.textContent = '';
+        }
+    });
+    
+    // Clear checkboxes
+    form.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+        cb.checked = false;
+    });
     
     // Reset custom checkbox visual states
     document.querySelectorAll('.form-field-custom-checkbox').forEach(function(div) {
@@ -4976,17 +6309,12 @@ document.getElementById('new-work-order-btn').addEventListener('click', async fu
     setDefaultCheckboxes();
     
     // Generate next work order number
-    await generateNextWorkOrderNumber();
+    try {
+        await generateNextWorkOrderNumber();
+    } catch (err) {
+        console.error('Error generating WO number:', err);
+    }
     
-    // Reset UI state
-    currentEditKey = null;
-    currentWorkOrderNumber = null; // Reset work order tracking
-    currentLockStatus = 'unlocked';
-    saveBtn.textContent = 'Save';
-    entriesDropdown.value = '';
-    entrySearch.value = '';
-    deleteEntryBtn.style.display = 'none';
-    newOrderBtn.style.display = 'none';
     document.getElementById('save-status').textContent = 'New work order ready';
     
     // Enable form
@@ -5160,9 +6488,8 @@ document.addEventListener('visibilitychange', function() {
     }
 });
 
-// Force unlock button
-document.getElementById('force-unlock-btn').addEventListener('click', function() {
-    // Use currentWatchingWorkOrder (set even in read-only) instead of currentWorkOrderNumber
+// Force unlock button (both bottom bar and menu)
+function handleForceUnlock() {
     const woNumber = currentWatchingWorkOrder || currentWorkOrderNumber;
     
     if (!woNumber) {
@@ -5171,50 +6498,96 @@ document.getElementById('force-unlock-btn').addEventListener('click', function()
     }
     
     if (confirm('Force unlock this work order? This will override the current lock.')) {
-        // Force acquire lock
         acquireLock(woNumber, true).then(() => {
             currentWorkOrderNumber = woNumber;
             currentLockStatus = 'locked-by-me';
             enableForm();
             document.getElementById('save-status').textContent = '✅ Lock overridden - you can now edit';
             document.getElementById('save-status').style.color = '#00ff88';
+            const menuStatus = document.getElementById('menu-status');
+            if (menuStatus) {
+                menuStatus.textContent = '✅ Lock overridden';
+                menuStatus.classList.remove('locked-readonly');
+            }
             setTimeout(() => {
                 document.getElementById('save-status').textContent = '✏️ You are editing';
+                if (menuStatus) menuStatus.textContent = '✏️ You are editing';
             }, 3000);
         }).catch(err => {
             alert('Failed to unlock: ' + (err.message || err));
         });
     }
-});
+}
+
+document.getElementById('force-unlock-btn').addEventListener('click', handleForceUnlock);
+document.getElementById('menu-force-unlock-btn').addEventListener('click', handleForceUnlock);
 
 // Save Company Info as Default
 document.getElementById('save-company-btn').addEventListener('click', function() {
-    if (!confirm('Save this as your company\'s default information? This can only be done once.')) {
+    // First ask for password
+    const password = prompt('Enter your password to save company info:');
+    
+    if (!password) {
+        return; // User cancelled
+    }
+    
+    // Verify password against Firebase Auth
+    const user = firebase.auth().currentUser;
+    if (!user || !user.email) {
+        alert('You must be signed in to save company info.');
         return;
     }
     
-    const companyInfo = {
-        company_name: document.getElementById('company_name').textContent || '',
-        company_address: document.getElementById('company_address').textContent || '',
-        company_contact: document.getElementById('company_contact').textContent || '',
-        company_website: document.getElementById('company_website').textContent || ''
-    };
+    // Re-authenticate user with their password
+    const credential = firebase.auth.EmailAuthProvider.credential(user.email, password);
     
-    database.ref('shopSettings/' + companyId + '/companyInfo').set(companyInfo).then(() => {
-        const status = document.getElementById('save-status');
-        status.textContent = '✅ Company info saved as default!';
-        status.style.color = '#00ff88';
+    user.reauthenticateWithCredential(credential).then(() => {
+        // Password is correct, proceed with confirmation
+        if (!confirm('Save this as your company\'s default information? This can only be done once.')) {
+            return;
+        }
         
-        // Hide the button and hint permanently after saving
-        document.getElementById('save-company-btn').style.display = 'none';
-        document.getElementById('company-hint').style.display = 'none';
+        const companyInfo = {
+            company_name: document.getElementById('company_name').textContent || '',
+            company_address: document.getElementById('company_address').textContent || '',
+            company_contact: document.getElementById('company_contact').textContent || '',
+            company_website: document.getElementById('company_website').textContent || ''
+        };
         
-        setTimeout(() => {
-            status.textContent = '';
-        }, 3000);
-    }).catch(err => {
-        alert('Error saving company info: ' + err.message);
+        database.ref('shopSettings/' + companyId + '/companyInfo').set(companyInfo).then(() => {
+            const status = document.getElementById('save-status');
+            status.textContent = '✅ Company info saved as default!';
+            status.style.color = '#00ff88';
+            
+            // Hide the button and hint permanently after saving
+            document.getElementById('save-company-btn').style.display = 'none';
+            document.getElementById('company-hint').style.display = 'none';
+            
+            setTimeout(() => {
+                status.textContent = '';
+            }, 3000);
+        }).catch(err => {
+            alert('Error saving company info: ' + err.message);
+        });
+    }).catch(error => {
+        // Password is incorrect or other error
+        alert('Incorrect password. Company info not saved.');
+        console.error('Re-authentication error:', error);
     });
+});
+
+// Settings button event listener
+document.getElementById('settings-btn').addEventListener('click', function() {
+    console.log('[SETTINGS] Settings button clicked');
+    loadShopSettings();
+    document.getElementById('settings-modal').style.display = 'block';
+});
+
+// Canned Jobs button event listener
+document.getElementById('canned-jobs-btn').addEventListener('click', function() {
+    console.log('[CANNED JOBS] Canned Jobs button clicked');
+    loadCannedJobs();
+    document.getElementById('canned-jobs-modal').style.display = 'block';
 });
 
 saveBtn.addEventListener('click', function() {
@@ -5246,6 +6619,9 @@ saveBtn.addEventListener('click', function() {
     if (techNotesWidget) {
         data.tech_notes = techNotesWidget.value || '';
     }
+    
+    // Save selected shop fees
+    data.selectedShopFees = selectedFees || [];
     
     // Note: labor_hours is read-only (comes from mobile timer), so we don't save it here
     // It will be preserved from existing data when updating
@@ -5385,6 +6761,8 @@ saveBtn.addEventListener('click', function() {
                     if (!exists) {
                         saveBtn.textContent = 'Update';
                         deleteEntryBtn.style.display = 'inline-block';
+                        const menuDeleteBtn = document.getElementById('menu-delete-btn');
+                        if (menuDeleteBtn) menuDeleteBtn.style.display = 'block';
                         newOrderBtn.style.display = 'inline-block';
                         
                         // Acquire lock and start watching this new work order
@@ -5421,57 +6799,113 @@ saveBtn.addEventListener('click', function() {
             }
         }
         
+        // Toggle Quick Jobs widget
+        function toggleQuickJobsWidget() {
+            const widget = document.getElementById('quick-jobs-widget');
+            const btn = widget.querySelector('.minimize-btn');
+            
+            if (widget.classList.contains('minimized')) {
+                widget.classList.remove('minimized');
+                btn.textContent = '−';
+            } else {
+                widget.classList.add('minimized');
+                btn.textContent = '🔧';
+            }
+        }
+        
         // Make widget draggable
-        const widget = document.getElementById('labor-timer-widget');
-        let isDragging = false;
-        let currentX;
-        let currentY;
-        let initialX;
-        let initialY;
-        let xOffset = 0;
-        let yOffset = 0;
-        
-        const header = widget.querySelector('.widget-header');
-        
-        header.addEventListener('mousedown', dragStart);
-        document.addEventListener('mousemove', drag);
-        document.addEventListener('mouseup', dragEnd);
-        
-        function dragStart(e) {
-            // Don't drag if clicking minimize button
-            if (e.target.classList.contains('minimize-btn')) return;
+        function setupDraggable(widgetId) {
+            const widget = document.getElementById(widgetId);
+            if (!widget) return;
             
-            initialX = e.clientX - xOffset;
-            initialY = e.clientY - yOffset;
+            let isDragging = false;
+            let currentX;
+            let currentY;
+            let initialX;
+            let initialY;
+            let xOffset = 0;
+            let yOffset = 0;
             
-            if (e.target === header || e.target.tagName === 'H3') {
-                isDragging = true;
+            const header = widget.querySelector('.widget-header');
+            
+            header.addEventListener('mousedown', dragStart);
+            document.addEventListener('mousemove', drag);
+            document.addEventListener('mouseup', dragEnd);
+            
+            function dragStart(e) {
+                if (e.target.classList.contains('minimize-btn') || e.target.closest('.minimize-btn')) {
+                    return;
+                }
+                
+                initialX = e.clientX - xOffset;
+                initialY = e.clientY - yOffset;
+                
+                if (e.target === header || header.contains(e.target)) {
+                    isDragging = true;
+                }
+            }
+            
+            function drag(e) {
+                if (isDragging) {
+                    e.preventDefault();
+                    
+                    currentX = e.clientX - initialX;
+                    currentY = e.clientY - initialY;
+                    
+                    xOffset = currentX;
+                    yOffset = currentY;
+                    
+                    setTranslate(currentX, currentY, widget);
+                }
+            }
+            
+            function dragEnd(e) {
+                initialX = currentX;
+                initialY = currentY;
+                isDragging = false;
+            }
+            
+            function setTranslate(xPos, yPos, el) {
+                el.style.transform = `translate3d(${xPos}px, ${yPos}px, 0)`;
             }
         }
         
-        function drag(e) {
-            if (isDragging) {
-                e.preventDefault();
-                
-                currentX = e.clientX - initialX;
-                currentY = e.clientY - initialY;
-                
-                xOffset = currentX;
-                yOffset = currentY;
-                
-                setTranslate(currentX, currentY, widget);
+        // Setup both widgets
+        const laborWidget = document.getElementById('labor-timer-widget');
+        setupDraggable('labor-timer-widget');
+        
+        // Setup quick jobs widget after a delay to ensure it exists
+        setTimeout(() => {
+            setupDraggable('quick-jobs-widget');
+        }, 500);
+        
+        // Top Menu Dropdown functionality
+        const menuButtons = document.querySelectorAll('.menu-btn');
+        menuButtons.forEach((btn, index) => {
+            const menuIds = ['file-menu', 'jobs-menu', 'settings-menu'];
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const menuId = menuIds[index];
+                // Close all other dropdowns
+                document.querySelectorAll('.dropdown-content').forEach(menu => {
+                    if (menu.id !== menuId) {
+                        menu.classList.remove('show');
+                    }
+                });
+                // Toggle the clicked dropdown
+                const menu = document.getElementById(menuId);
+                menu.classList.toggle('show');
+            });
+        });
+        
+        // Close dropdowns when clicking outside
+        window.addEventListener('click', function(e) {
+            if (!e.target.matches('.menu-btn')) {
+                document.querySelectorAll('.dropdown-content').forEach(menu => {
+                    menu.classList.remove('show');
+                });
             }
-        }
-        
-        function dragEnd(e) {
-            initialX = currentX;
-            initialY = currentY;
-            isDragging = false;
-        }
-        
-        function setTranslate(xPos, yPos, el) {
-            el.style.transform = `translate3d(${xPos}px, ${yPos}px, 0)`;
-        }
+        });
         
         // Auto-save tech notes
         const techNotesWidget = document.getElementById('tech_notes_widget');
@@ -5553,9 +6987,176 @@ saveBtn.addEventListener('click', function() {
         }
     </script>
 
+    <!-- Settings Modal -->
+    <div id="settings-modal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);z-index:10000;">
+        <div style="background:#1e1e1e;border:1px solid #404040;border-radius:8px;max-width:600px;margin:50px auto;padding:24px;color:#fff;">
+            <h2 style="margin-top:0;">Shop Settings</h2>
+            
+            <h3 style="color:#00bfff;font-size:16px;margin-top:0;">Company Information</h3>
+            <button class="btn-professional" onclick="saveCompanyInfoFromSettings()" style="background:#ff9800;margin-bottom:24px;">💾 Save Current Company Info</button>
+            
+            <hr style="border:none;border-top:1px solid #404040;margin:24px 0;">
+            
+            <h3 style="color:#00bfff;font-size:16px;">Pricing Settings</h3>
+            <label style="display:block;margin-bottom:8px;">Labor Rate ($/hour):</label>
+            <input type="number" id="labor-rate-setting" step="0.01" style="width:100%;padding:8px;margin-bottom:16px;border:1px solid #404040;border-radius:4px;background:#2d2d2d;color:#fff;">
+            
+            <label style="display:block;margin-bottom:8px;">Tax Rate (%):</label>
+            <input type="number" id="tax-rate-setting" step="0.01" style="width:100%;padding:8px;margin-bottom:24px;border:1px solid #404040;border-radius:4px;background:#2d2d2d;color:#fff;">
+            
+            <hr style="border:none;border-top:1px solid #404040;margin:24px 0;">
+            
+            <h3 style="color:#00bfff;font-size:16px;">Shop Fees</h3>
+            <div id="shop-fees-list" style="margin-bottom:16px;">
+                <!-- Dynamic fee list will appear here -->
+            </div>
+            <button class="btn-professional" onclick="addShopFee()" style="font-size:12px;padding:6px 12px;">+ Add Fee</button>
+            
+            <hr style="border:none;border-top:1px solid #404040;margin:24px 0;">
+            
+            <button class="btn-professional" onclick="saveShopSettings()">Save Settings</button>
+            <button class="btn-professional" onclick="closeSettingsModal()">Cancel</button>
+        </div>
+    </div>
+
+    <!-- Fee Selector Modal -->
+    <div id="fee-selector-modal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);z-index:10000;">
+        <div style="background:#1e1e1e;border:1px solid #404040;border-radius:8px;max-width:400px;margin:100px auto;padding:24px;color:#fff;">
+            <h2 style="margin-top:0;">Select Shop Fees</h2>
+            <div id="fee-checkboxes" style="margin-bottom:20px;">
+                <!-- Fee checkboxes will be dynamically added here -->
+            </div>
+            <div style="text-align:right;">
+                <button class="btn-professional" onclick="applySelectedFees()">Apply</button>
+                <button class="btn-professional" onclick="closeFeeSelector()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Canned Jobs Modal -->
+    <div id="canned-jobs-modal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);z-index:10000;overflow-y:auto;">
+        <div style="background:#1e1e1e;border:1px solid #404040;border-radius:8px;max-width:900px;margin:50px auto;padding:24px;color:#fff;">
+            <h2 style="margin-top:0;">Manage Canned Jobs</h2>
+            <div id="canned-jobs-list"></div>
+            
+            <h3 style="margin-top:24px;" id="job-form-title">Add New Canned Job</h3>
+            <input type="hidden" id="edit-job-key" value="">
+            
+            <!-- Basic Info Section -->
+            <div style="background:#2a2a2a;padding:16px;border-radius:6px;margin-bottom:16px;">
+                <h4 style="margin:0 0 12px 0;color:#00bfff;font-size:14px;">📋 BASIC INFO</h4>
+                
+                <label style="display:block;margin-bottom:4px;color:#aaa;font-size:12px;">Job Name *</label>
+                <input type="text" id="new-job-name" placeholder="e.g., Oil Change, Brake Pads" style="width:100%;padding:10px;margin-bottom:12px;border:1px solid #404040;border-radius:4px;background:#1e1e1e;color:#fff;font-size:14px;">
+                
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                    <div>
+                        <label style="display:block;margin-bottom:4px;color:#aaa;font-size:12px;">Category</label>
+                        <select id="new-job-category" style="width:100%;padding:10px;border:1px solid #404040;border-radius:4px;background:#1e1e1e;color:#fff;font-size:14px;">
+                            <option value="Maintenance">Maintenance</option>
+                            <option value="Brakes">Brakes</option>
+                            <option value="Tires">Tires</option>
+                            <option value="Engine">Engine</option>
+                            <option value="Suspension">Suspension</option>
+                            <option value="Electrical">Electrical</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label style="display:block;margin-bottom:4px;color:#aaa;font-size:12px;">Shortcode (optional)</label>
+                        <input type="text" id="new-job-shortcode" placeholder="e.g., /oil or /brakes" style="width:100%;padding:10px;border:1px solid #404040;border-radius:4px;background:#1e1e1e;color:#fff;font-size:14px;">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Parts Section -->
+            <div style="background:#2a2a2a;padding:16px;border-radius:6px;margin-bottom:16px;">
+                <h4 style="margin:0 0 12px 0;color:#00bfff;font-size:14px;">🔧 PARTS & PRICING</h4>
+                
+                <div id="parts-list">
+                    <!-- Part rows will be added here -->
+                </div>
+                
+                <button class="btn-professional" onclick="addPartRow()" style="font-size:12px;padding:6px 12px;margin-top:8px;">+ Add Part</button>
+            </div>
+            
+            <!-- Labor Section -->
+            <div style="background:#2a2a2a;padding:16px;border-radius:6px;margin-bottom:16px;">
+                <h4 style="margin:0 0 12px 0;color:#00bfff;font-size:14px;">⏱️ LABOR</h4>
+                
+                <label style="display:block;margin-bottom:4px;color:#aaa;font-size:12px;">Labor Hours</label>
+                <input type="number" id="new-job-hours" step="0.1" placeholder="e.g., 0.5" style="width:200px;padding:10px;border:1px solid #404040;border-radius:4px;background:#1e1e1e;color:#fff;font-size:14px;">
+            </div>
+            
+            <!-- Options Section -->
+            <div style="background:#2a2a2a;padding:16px;border-radius:6px;margin-bottom:16px;">
+                <h4 style="margin:0 0 12px 0;color:#00bfff;font-size:14px;">⚙️ OPTIONS</h4>
+                
+                <label style="display:block;margin-bottom:12px;cursor:pointer;">
+                    <input type="checkbox" id="new-job-favorite" style="margin-right:8px;">
+                    <span style="color:#ffc107;">⭐</span> Mark as Favorite (appears in quick-bar)
+                </label>
+                
+                <label style="display:block;cursor:pointer;">
+                    <input type="checkbox" id="new-job-perunit" style="margin-right:8px;">
+                    <span style="color:#ffc107;">📦</span> Per Unit Job (prompt for quantity when applying, e.g., tires/wheels)
+                </label>
+            </div>
+            
+            <div style="border-top:1px solid #404040;padding-top:16px;margin-top:16px;">
+                <button class="btn-professional" onclick="saveJob()" id="save-job-btn" style="padding:10px 24px;">Add Job</button>
+                <button class="btn-professional" onclick="cancelEdit()" id="cancel-edit-btn" style="display:none;padding:10px 24px;">Cancel</button>
+                <button class="btn-professional" onclick="closeCannedJobsModal()" style="padding:10px 24px;">Close</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Quick Jobs Bar -->
+    <div id="quick-jobs-widget" class="minimized">
+        <div class="widget-header">
+            <h3>🔧 QUICK JOBS</h3>
+            <button class="minimize-btn" onclick="toggleQuickJobsWidget(); event.stopPropagation();">−</button>
+        </div>
+        <div class="widget-content">
+            <div style="margin-bottom:12px;">
+                <input type="text" id="quick-job-search" placeholder="🔍 Search jobs or type /shortcode..." style="width:100%;padding:8px;border:1px solid #404040;border-radius:4px;background:#2d2d2d;color:#fff;font-size:13px;">
+            </div>
+            
+            <div id="favorite-jobs-section" style="margin-bottom:12px;">
+                <div style="color:#888;font-size:11px;margin-bottom:6px;font-weight:600;">⭐ FAVORITES</div>
+                <div id="favorite-jobs-buttons"></div>
+            </div>
+            
+            <div id="recent-jobs-section" style="margin-bottom:12px;">
+                <div style="color:#888;font-size:11px;margin-bottom:6px;font-weight:600;">🕐 RECENT</div>
+                <div id="recent-jobs-buttons"></div>
+            </div>
+            
+            <div id="category-jobs-section">
+                <div style="color:#888;font-size:11px;margin-bottom:6px;font-weight:600;">📂 CATEGORIES</div>
+                <div id="category-buttons" style="display:flex;flex-wrap:wrap;gap:4px;">
+                    <button class="btn-professional" onclick="showJobsByCategory('all')" style="font-size:11px;padding:4px 8px;">All</button>
+                    <button class="btn-professional" onclick="showJobsByCategory('Maintenance')" style="font-size:11px;padding:4px 8px;">Maint.</button>
+                    <button class="btn-professional" onclick="showJobsByCategory('Brakes')" style="font-size:11px;padding:4px 8px;">Brakes</button>
+                    <button class="btn-professional" onclick="showJobsByCategory('Tires')" style="font-size:11px;padding:4px 8px;">Tires</button>
+                    <button class="btn-professional" onclick="showJobsByCategory('Engine')" style="font-size:11px;padding:4px 8px;">Engine</button>
+                </div>
+            </div>
+            
+            <div id="search-results-section" style="display:none;margin-top:12px;">
+                <div style="color:#888;font-size:11px;margin-bottom:6px;font-weight:600;">RESULTS</div>
+                <div id="search-results-buttons"></div>
+            </div>
+            
+            <div style="border-top:1px solid #404040;padding-top:12px;margin-top:12px;">
+                <button id="undo-btn-widget" class="btn-professional" onclick="undoLastAction()" style="width:100%;font-size:12px;padding:8px;margin-bottom:8px;display:none;background:#ff9800;border-color:#ff9800;">↶ Undo Last Job</button>
+                <button class="btn-professional" onclick="document.getElementById('canned-jobs-modal').style.display='block';loadCannedJobs();" style="width:100%;font-size:12px;padding:8px;">⚙️ Manage Jobs</button>
+            </div>
+        </div>
+    </div>
+
 </body>
 </html>
-
 
 
 
